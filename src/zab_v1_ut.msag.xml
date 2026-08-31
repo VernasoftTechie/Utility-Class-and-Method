@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_MSAG" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <T100A>
+    <ARBGB>ZAB_V1_UT</ARBGB>
+    <MASTERLANG>E</MASTERLANG>
+    <STEXT>Vernasoft Utility Framework (ZCL_AB_V1_UT) messages</STEXT>
+   </T100A>
+   <T100_TAB>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAB_V1_UT</ARBGB>
+     <MSGNR>001</MSGNR>
+     <TEXT>Utility error: &amp;1 &amp;2 &amp;3 &amp;4</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAB_V1_UT</ARBGB>
+     <MSGNR>002</MSGNR>
+     <TEXT>Missing authorization for object &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAB_V1_UT</ARBGB>
+     <MSGNR>003</MSGNR>
+     <TEXT>XLSX could not be parsed (&amp;1)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAB_V1_UT</ARBGB>
+     <MSGNR>004</MSGNR>
+     <TEXT>Column '&amp;1' could not be mapped</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAB_V1_UT</ARBGB>
+     <MSGNR>005</MSGNR>
+     <TEXT>JSON/XML (de)serialization failed: &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAB_V1_UT</ARBGB>
+     <MSGNR>006</MSGNR>
+     <TEXT>Email could not be sent: &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAB_V1_UT</ARBGB>
+     <MSGNR>007</MSGNR>
+     <TEXT>Attachment operation failed: &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAB_V1_UT</ARBGB>
+     <MSGNR>008</MSGNR>
+     <TEXT>Invalid date/number format: &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAB_V1_UT</ARBGB>
+     <MSGNR>009</MSGNR>
+     <TEXT>Application Log operation failed: &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAB_V1_UT</ARBGB>
+     <MSGNR>010</MSGNR>
+     <TEXT>User &amp;1 is invalid or locked</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAB_V1_UT</ARBGB>
+     <MSGNR>011</MSGNR>
+     <TEXT>No SAP GUI session - GUI utilities unavailable</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAB_V1_UT</ARBGB>
+     <MSGNR>012</MSGNR>
+     <TEXT>No attachment adapter configured for area &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAB_V1_UT</ARBGB>
+     <MSGNR>013</MSGNR>
+     <TEXT>Operation &amp;1 not allowed in RAP phase &amp;2</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAB_V1_UT</ARBGB>
+     <MSGNR>014</MSGNR>
+     <TEXT>Dynamic query rejected: &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAB_V1_UT</ARBGB>
+     <MSGNR>015</MSGNR>
+     <TEXT>File access denied for path &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAB_V1_UT</ARBGB>
+     <MSGNR>016</MSGNR>
+     <TEXT>Number range &amp;1: &amp;2</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAB_V1_UT</ARBGB>
+     <MSGNR>017</MSGNR>
+     <TEXT>Parallel task failed: &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAB_V1_UT</ARBGB>
+     <MSGNR>018</MSGNR>
+     <TEXT>Config key &amp;1 not found</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAB_V1_UT</ARBGB>
+     <MSGNR>019</MSGNR>
+     <TEXT>Object &amp;1 &amp;2 does not exist</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAB_V1_UT</ARBGB>
+     <MSGNR>020</MSGNR>
+     <TEXT>Conversion failed: &amp;1 -&gt; &amp;2</TEXT>
+    </T100>
+   </T100_TAB>
+   <T100U_TAB>
+    <T100U><ARBGB>ZAB_V1_UT</ARBGB><MSGNR>001</MSGNR><NAME>ZAB_V1_UT</NAME><DATUM>00000000</DATUM><SELFDEF>X</SELFDEF></T100U>
+    <T100U><ARBGB>ZAB_V1_UT</ARBGB><MSGNR>002</MSGNR><NAME>ZAB_V1_UT</NAME><DATUM>00000000</DATUM><SELFDEF>X</SELFDEF></T100U>
+    <T100U><ARBGB>ZAB_V1_UT</ARBGB><MSGNR>003</MSGNR><NAME>ZAB_V1_UT</NAME><DATUM>00000000</DATUM><SELFDEF>X</SELFDEF></T100U>
+    <T100U><ARBGB>ZAB_V1_UT</ARBGB><MSGNR>004</MSGNR><NAME>ZAB_V1_UT</NAME><DATUM>00000000</DATUM><SELFDEF>X</SELFDEF></T100U>
+    <T100U><ARBGB>ZAB_V1_UT</ARBGB><MSGNR>005</MSGNR><NAME>ZAB_V1_UT</NAME><DATUM>00000000</DATUM><SELFDEF>X</SELFDEF></T100U>
+    <T100U><ARBGB>ZAB_V1_UT</ARBGB><MSGNR>006</MSGNR><NAME>ZAB_V1_UT</NAME><DATUM>00000000</DATUM><SELFDEF>X</SELFDEF></T100U>
+    <T100U><ARBGB>ZAB_V1_UT</ARBGB><MSGNR>007</MSGNR><NAME>ZAB_V1_UT</NAME><DATUM>00000000</DATUM><SELFDEF>X</SELFDEF></T100U>
+    <T100U><ARBGB>ZAB_V1_UT</ARBGB><MSGNR>008</MSGNR><NAME>ZAB_V1_UT</NAME><DATUM>00000000</DATUM><SELFDEF>X</SELFDEF></T100U>
+    <T100U><ARBGB>ZAB_V1_UT</ARBGB><MSGNR>009</MSGNR><NAME>ZAB_V1_UT</NAME><DATUM>00000000</DATUM><SELFDEF>X</SELFDEF></T100U>
+    <T100U><ARBGB>ZAB_V1_UT</ARBGB><MSGNR>010</MSGNR><NAME>ZAB_V1_UT</NAME><DATUM>00000000</DATUM><SELFDEF>X</SELFDEF></T100U>
+    <T100U><ARBGB>ZAB_V1_UT</ARBGB><MSGNR>011</MSGNR><NAME>ZAB_V1_UT</NAME><DATUM>00000000</DATUM><SELFDEF>X</SELFDEF></T100U>
+    <T100U><ARBGB>ZAB_V1_UT</ARBGB><MSGNR>012</MSGNR><NAME>ZAB_V1_UT</NAME><DATUM>00000000</DATUM><SELFDEF>X</SELFDEF></T100U>
+    <T100U><ARBGB>ZAB_V1_UT</ARBGB><MSGNR>013</MSGNR><NAME>ZAB_V1_UT</NAME><DATUM>00000000</DATUM><SELFDEF>X</SELFDEF></T100U>
+    <T100U><ARBGB>ZAB_V1_UT</ARBGB><MSGNR>014</MSGNR><NAME>ZAB_V1_UT</NAME><DATUM>00000000</DATUM><SELFDEF>X</SELFDEF></T100U>
+    <T100U><ARBGB>ZAB_V1_UT</ARBGB><MSGNR>015</MSGNR><NAME>ZAB_V1_UT</NAME><DATUM>00000000</DATUM><SELFDEF>X</SELFDEF></T100U>
+    <T100U><ARBGB>ZAB_V1_UT</ARBGB><MSGNR>016</MSGNR><NAME>ZAB_V1_UT</NAME><DATUM>00000000</DATUM><SELFDEF>X</SELFDEF></T100U>
+    <T100U><ARBGB>ZAB_V1_UT</ARBGB><MSGNR>017</MSGNR><NAME>ZAB_V1_UT</NAME><DATUM>00000000</DATUM><SELFDEF>X</SELFDEF></T100U>
+    <T100U><ARBGB>ZAB_V1_UT</ARBGB><MSGNR>018</MSGNR><NAME>ZAB_V1_UT</NAME><DATUM>00000000</DATUM><SELFDEF>X</SELFDEF></T100U>
+    <T100U><ARBGB>ZAB_V1_UT</ARBGB><MSGNR>019</MSGNR><NAME>ZAB_V1_UT</NAME><DATUM>00000000</DATUM><SELFDEF>X</SELFDEF></T100U>
+    <T100U><ARBGB>ZAB_V1_UT</ARBGB><MSGNR>020</MSGNR><NAME>ZAB_V1_UT</NAME><DATUM>00000000</DATUM><SELFDEF>X</SELFDEF></T100U>
+   </T100U_TAB>
+  </asx:values>
+ </asx:abap>
+</abapGit>
