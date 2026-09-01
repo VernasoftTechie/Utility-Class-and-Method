@@ -49,8 +49,9 @@ INTERFACE zif_ab_v1_ut_log
   METHODS to_bapiret
     RETURNING VALUE(rt) TYPE bapiret2_t.
 
+  "! @parameter iv_sep | line separator; defaults to newline when not supplied
   METHODS to_string
-    IMPORTING iv_sep    TYPE string DEFAULT cl_abap_char_utilities=>newline
+    IMPORTING iv_sep    TYPE string OPTIONAL
     RETURNING VALUE(rv) TYPE string.
 
 ENDINTERFACE.

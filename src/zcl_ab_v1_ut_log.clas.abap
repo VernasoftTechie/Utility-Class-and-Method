@@ -144,6 +144,11 @@ CLASS zcl_ab_v1_ut_log IMPLEMENTATION.
 
 
   METHOD zif_ab_v1_ut_log~to_string.
+    DATA(lv_sep) = iv_sep.
+    IF lv_sep IS INITIAL.
+      lv_sep = cl_abap_char_utilities=>newline.
+    ENDIF.
+
     DATA lt_lines TYPE string_table.
     LOOP AT mt_msgs INTO DATA(ls).
       DATA(lv) = ls-message.
@@ -153,7 +158,7 @@ CLASS zcl_ab_v1_ut_log IMPLEMENTATION.
       ENDIF.
       APPEND |{ ls-type }: { lv }| TO lt_lines.
     ENDLOOP.
-    rv = concat_lines_of( table = lt_lines sep = iv_sep ).
+    rv = concat_lines_of( table = lt_lines sep = lv_sep ).
   ENDMETHOD.
 
 ENDCLASS.
