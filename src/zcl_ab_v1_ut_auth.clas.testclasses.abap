@@ -31,7 +31,7 @@ CLASS ltc_auth IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD unknown_user_invalid.
-    cl_abap_unit_assert=>assert_false( mo->is_user_valid( 'ZZ_NO_SUCH_USER' ) ).
+    cl_abap_unit_assert=>assert_false( mo->is_user_valid( CONV syuname( 'ZZNOUSER9' ) ) ).
   ENDMETHOD.
 
 ENDCLASS.

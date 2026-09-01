@@ -8,7 +8,7 @@ REPORT zab_v1_ut_demo.
 
 PARAMETERS: p_area TYPE zab_v1_ut_area AS LISTBOX VISIBLE LENGTH 25 DEFAULT 'STR',
             p_all  AS CHECKBOX,
-            p_cmt  AS CHECKBOX,           " allow COMMIT/save side effects
+            p_cmt  AS CHECKBOX,           " allow COMMIT / save side effects
             p_send AS CHECKBOX,           " actually send the demo mail
             p_rcpt TYPE string LOWER CASE.
 
@@ -16,35 +16,43 @@ CLASS lcl_demo DEFINITION FINAL.
   PUBLIC SECTION.
     METHODS run IMPORTING iv_area TYPE zab_v1_ut_area.
   PRIVATE SECTION.
-    TYPES: BEGIN OF ty_line, id TYPE i, name TYPE string, amount TYPE p LENGTH 13 DECIMALS 2, END OF ty_line.
-    METHODS h IMPORTING iv TYPE string.
+    TYPES: BEGIN OF ty_line,
+             id     TYPE i,
+             name   TYPE string,
+             amount TYPE p LENGTH 13 DECIMALS 2,
+           END OF ty_line.
+
     METHODS w IMPORTING iv TYPE string.
-    METHODS demo_str.
-    METHODS demo_conv.
-    METHODS demo_tab.
-    METHODS demo_db.
-    METHODS demo_file.
-    METHODS demo_json.
-    METHODS demo_log.
-    METHODS demo_msg.
+    METHODS h IMPORTING iv TYPE string.
+
+    METHODS demo_str    RAISING zcx_ab_v1_ut.
+    METHODS demo_conv   RAISING zcx_ab_v1_ut.
+    METHODS demo_tab    RAISING zcx_ab_v1_ut.
+    METHODS demo_db     RAISING zcx_ab_v1_ut.
+    METHODS demo_file   RAISING zcx_ab_v1_ut.
+    METHODS demo_json   RAISING zcx_ab_v1_ut.
+    METHODS demo_log    RAISING zcx_ab_v1_ut.
+    METHODS demo_msg    RAISING zcx_ab_v1_ut.
     METHODS demo_auth.
-    METHODS demo_num.
-    METHODS demo_mail.
-    METHODS demo_attach.
+    METHODS demo_num    RAISING zcx_ab_v1_ut.
+    METHODS demo_mail   RAISING zcx_ab_v1_ut.
+    METHODS demo_attach RAISING zcx_ab_v1_ut.
     METHODS demo_sys.
-    METHODS demo_cfg.
+    METHODS demo_cfg    RAISING zcx_ab_v1_ut.
     METHODS demo_rap.
     METHODS demo_job.
 ENDCLASS.
 
 CLASS lcl_demo IMPLEMENTATION.
 
-  METHOD h.
-    SKIP. WRITE: / '===', iv, '==='.  ULINE.
+  METHOD w.
+    WRITE / iv.
   ENDMETHOD.
 
-  METHOD w.
-    WRITE: / iv.
+  METHOD h.
+    SKIP.
+    WRITE / |=== { iv } ===|.
+    ULINE.
   ENDMETHOD.
 
   METHOD run.
@@ -68,7 +76,7 @@ CLASS lcl_demo IMPLEMENTATION.
           WHEN 'JOB'.    demo_job( ).
           WHEN OTHERS.   w( |(no demo for area { iv_area })| ).
         ENDCASE.
-      CATCH zcx_ab_v1_ut INTO DATA(lx).
+      CATCH cx_root INTO DATA(lx).
         w( |ERROR: { lx->get_text( ) }| ).
     ENDTRY.
   ENDMETHOD.
@@ -78,6 +86,7 @@ CLASS lcl_demo IMPLEMENTATION.
     DATA(o) = zcl_ab_v1_ut=>str( ).
     w( |to_amount('1.234,56' EU) = { o->to_amount( iv_text = '1.234,56' iv_notation = zif_ab_v1_ut_str=>c_notation-eu ) }| ).
     w( |from_amount(1234.5 EUR EU) = { o->from_amount( iv_amount = CONV decfloat34( '1234.5' ) iv_currency = 'EUR' iv_notation = zif_ab_v1_ut_str=>c_notation-eu ) }| ).
+    w( |alpha_in('4711') = { o->alpha_in( '4711' ) }| ).
     w( |sha256('abc') = { o->hash( iv_data = 'abc' iv_algo = zif_ab_v1_ut_str=>c_algo-sha256 ) }| ).
     w( |is_valid email a@b.com = { o->is_valid( iv_value = 'a@b.com' iv_kind = zif_ab_v1_ut_str=>c_kind-email ) }| ).
     w( |amount_in_words(105.25 USD) = { o->amount_in_words( iv_amount = CONV decfloat34( '105.25' ) iv_currency = 'USD' ) }| ).
@@ -98,11 +107,11 @@ CLASS lcl_demo IMPLEMENTATION.
     h( `TAB` ).
     DATA lt_old TYPE STANDARD TABLE OF ty_line WITH EMPTY KEY.
     DATA lt_new LIKE lt_old.
+    DATA lt_i   LIKE lt_old.
+    DATA lt_u   LIKE lt_old.
+    DATA lt_d   LIKE lt_old.
     lt_old = VALUE #( ( id = 1 name = 'A' ) ( id = 2 name = 'B' ) ).
     lt_new = VALUE #( ( id = 2 name = 'B2' ) ( id = 3 name = 'C' ) ).
-    DATA lt_i LIKE lt_old.
-    DATA lt_u LIKE lt_old.
-    DATA lt_d LIKE lt_old.
     zcl_ab_v1_ut=>tab( )->diff( EXPORTING it_old = lt_old it_new = lt_new it_key_fields = VALUE #( ( `ID` ) )
                                IMPORTING et_insert = lt_i et_update = lt_u et_delete = lt_d ).
     w( |diff: insert={ lines( lt_i ) } update={ lines( lt_u ) } delete={ lines( lt_d ) }| ).
@@ -112,7 +121,7 @@ CLASS lcl_demo IMPLEMENTATION.
     h( `DB` ).
     DATA(exists) = zcl_ab_v1_ut=>db( )->exists( iv_entity = 'ZAB_V1_UT_ADPT'
                                                 it_keys   = VALUE #( ( name = 'AREA' value = 'ATTACH' ) ) ).
-    w( |ZAB_V1_UT_ADPT has ATTACH row = { exists }| ).
+    w( |ZAB_V1_UT_ADPT has an active ATTACH row = { exists }| ).
   ENDMETHOD.
 
   METHOD demo_file.
@@ -121,14 +130,13 @@ CLASS lcl_demo IMPLEMENTATION.
     DATA lt TYPE STANDARD TABLE OF ty_line WITH EMPTY KEY.
     lt = VALUE #( ( id = 1 name = 'A' amount = '10.00' ) ( id = 2 name = 'B' amount = '20.00' ) ).
     DATA(csv) = zcl_ab_v1_ut=>file( )->csv_build( it_table = lt iv_sep = ';' ).
-    w( |csv_build header = { substring_before( val = csv sub = cl_abap_char_utilities=>newline ) }| ).
+    w( |csv header = { substring_before( val = csv sub = cl_abap_char_utilities=>newline ) }| ).
   ENDMETHOD.
 
   METHOD demo_json.
     h( `JSON` ).
     DATA(ls) = VALUE ty_line( id = 1 name = 'Ann' amount = '99.90' ).
-    DATA(j) = zcl_ab_v1_ut=>json( )->serialize( iv_data = ls iv_camel_case = abap_true iv_pretty = abap_true ).
-    w( j ).
+    w( zcl_ab_v1_ut=>json( )->serialize( iv_data = ls iv_camel_case = abap_true iv_pretty = abap_true ) ).
   ENDMETHOD.
 
   METHOD demo_log.
@@ -140,7 +148,7 @@ CLASS lcl_demo IMPLEMENTATION.
     IF p_cmt = abap_true.
       zcl_ab_v1_ut=>set_phase( zif_ab_v1_ut_types=>c_phase-unknown ).
       lo->save( iv_commit = abap_true ).
-      w( `saved to SLG1 (object ZAB_V1_UT)` ).
+      w( `saved (see SLG1, object ZAB_V1_UT)` ).
     ENDIF.
   ENDMETHOD.
 
@@ -168,17 +176,18 @@ CLASS lcl_demo IMPLEMENTATION.
 
   METHOD demo_mail.
     h( `MAIL` ).
-    DATA(body) = zcl_ab_v1_ut=>mail( )->build_html_body( iv_title = 'ZCL_AB_V1_UT demo'
+    DATA(body) = zcl_ab_v1_ut=>mail( )->build_html_body(
+                   iv_title      = 'ZCL_AB_V1_UT demo'
                    it_paragraphs = VALUE #( ( `This is a demo mail.` ) ) ).
     w( |html body length = { strlen( body ) }| ).
     IF p_send = abap_true AND p_rcpt IS NOT INITIAL.
       zcl_ab_v1_ut=>set_phase( zif_ab_v1_ut_types=>c_phase-unknown ).
       DATA(id) = zcl_ab_v1_ut=>mail( )->send( VALUE #(
-        recipients  = VALUE #( ( p_rcpt ) )
-        subject     = 'ZCL_AB_V1_UT demo'
-        body_html   = body
+        recipients       = VALUE #( ( p_rcpt ) )
+        subject          = 'ZCL_AB_V1_UT demo'
+        body_html        = body
         send_immediately = abap_true
-        commit_work = abap_true ) ).
+        commit_work      = abap_true ) ).
       w( |sent, request = { id }| ).
     ENDIF.
   ENDMETHOD.
@@ -189,7 +198,7 @@ CLASS lcl_demo IMPLEMENTATION.
     w( |new_guid_c32 = { o->new_guid_c32( ) }| ).
     zcl_ab_v1_ut=>set_phase( zif_ab_v1_ut_types=>c_phase-unknown ).
     DATA lv_x TYPE xstring VALUE '48656C6C6F'.
-    DATA(aid) = o->attach( is_bo_key = VALUE #( objtype = 'ZDEMO' objkey = 'K1' )
+    DATA(aid) = o->attach( is_bo_key   = VALUE #( objtype = 'ZDEMO' objkey = 'K1' )
                            iv_filename = 'demo.txt' iv_mimetype = 'text/plain' iv_content = lv_x ).
     w( |attached id = { aid }| ).
     w( |list count = { lines( o->list( VALUE #( objtype = 'ZDEMO' objkey = 'K1' ) ) ) }| ).
@@ -204,8 +213,7 @@ CLASS lcl_demo IMPLEMENTATION.
 
   METHOD demo_cfg.
     h( `CFG` ).
-    DATA(lt) = zcl_ab_v1_ut=>cfg( )->enum_values( 'ZAB_V1_UT_AREA' ).
-    w( |ZAB_V1_UT_AREA has { lines( lt ) } values| ).
+    w( |ZAB_V1_UT_AREA has { lines( zcl_ab_v1_ut=>cfg( )->enum_values( 'ZAB_V1_UT_AREA' ) ) } values| ).
   ENDMETHOD.
 
   METHOD demo_rap.

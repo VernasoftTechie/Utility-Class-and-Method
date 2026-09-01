@@ -30,10 +30,7 @@ CLASS zcl_ab_v1_ut_log IMPLEMENTATION.
     CALL FUNCTION 'BAL_LOG_MSG_ADD'
       EXPORTING  i_log_handle     = mv_handle
                  i_s_msg          = ls_msg
-      EXCEPTIONS log_not_found    = 1
-                 msg_inconsistent = 2
-                 log_is_full      = 3
-                 OTHERS           = 4.
+      EXCEPTIONS OTHERS           = 0.
   ENDMETHOD.
 
 
@@ -48,9 +45,11 @@ CLASS zcl_ab_v1_ut_log IMPLEMENTATION.
     CALL FUNCTION 'BAL_LOG_CREATE'
       EXPORTING  i_s_log                 = ls_log
       IMPORTING  e_log_handle            = lo->mv_handle
-      EXCEPTIONS log_header_inconsistent = 1
-                 OTHERS                  = 2.
-    " a missing SLG0 object must not break the caller - keep a memory-only log
+      EXCEPTIONS OTHERS                  = 0.
+    IF sy-subrc <> 0.
+      " a missing SLG0 object must not break the caller - keep a memory-only log
+      CLEAR lo->mv_handle.
+    ENDIF.
     ro_log = lo.
   ENDMETHOD.
 
@@ -110,16 +109,23 @@ CLASS zcl_ab_v1_ut_log IMPLEMENTATION.
     CHECK mv_handle IS NOT INITIAL.
 
     DATA(lt_handles) = VALUE bal_t_logh( ( mv_handle ) ).
-    CALL FUNCTION 'BAL_DB_SAVE'
-      EXPORTING  i_t_log_handle       = lt_handles
-                 i_2th_connection     = xsdbool( iv_commit = abap_true )
-                 i_2th_connect_commit = xsdbool( iv_commit = abap_true )
-      EXCEPTIONS log_not_found        = 1
-                 save_not_allowed     = 2
-                 numbering_error      = 3
-                 OTHERS               = 4.
+
+    IF iv_commit = abap_true.
+      " independent save + commit on a secondary DB connection - no COMMIT WORK here
+      CALL FUNCTION 'BAL_DB_SAVE'
+        EXPORTING  i_t_log_handle       = lt_handles
+                   i_2th_connection     = abap_true
+                   i_2th_connect_commit = abap_true
+        EXCEPTIONS OTHERS               = 4.
+    ELSE.
+      " save into the caller's LUW; caller / RAP runtime commits
+      CALL FUNCTION 'BAL_DB_SAVE'
+        EXPORTING  i_t_log_handle = lt_handles
+        EXCEPTIONS OTHERS         = 4.
+    ENDIF.
+
     IF sy-subrc <> 0.
-      zcx_ab_v1_ut=>raise_t100( iv_msgno = '009' iv_msgv1 = |save rc={ sy-subrc }| ).
+      zcx_ab_v1_ut=>raise_t100( iv_msgno = '009' iv_msgv1 = |BAL_DB_SAVE rc={ sy-subrc }| ) ##NO_TEXT.
     ENDIF.
   ENDMETHOD.
 
@@ -129,7 +135,7 @@ CLASS zcl_ab_v1_ut_log IMPLEMENTATION.
     DATA(lt_handles) = VALUE bal_t_logh( ( mv_handle ) ).
     CALL FUNCTION 'BAL_DSP_LOG_DISPLAY'
       EXPORTING  i_t_log_handle = lt_handles
-      EXCEPTIONS OTHERS         = 1.
+      EXCEPTIONS OTHERS         = 0.
   ENDMETHOD.
 
 

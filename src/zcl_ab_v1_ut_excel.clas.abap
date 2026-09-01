@@ -11,11 +11,15 @@ CLASS zcl_ab_v1_ut_excel DEFINITION
       IMPORTING iv_col    TYPE i
       RETURNING VALUE(rv) TYPE string.
 
+    METHODS xesc
+      IMPORTING iv        TYPE string
+      RETURNING VALUE(rv) TYPE string.
+
     METHODS write_grid
-      IMPORTING it_data       TYPE ANY TABLE
+      IMPORTING it_data        TYPE ANY TABLE
                 iv_header_only TYPE abap_bool DEFAULT abap_false
-                it_col_texts  TYPE zif_ab_v1_ut_types=>ty_nv_tab OPTIONAL
-      RETURNING VALUE(rv)     TYPE xstring
+                it_col_texts   TYPE zif_ab_v1_ut_types=>ty_nv_tab OPTIONAL
+      RETURNING VALUE(rv)      TYPE xstring
       RAISING   zcx_ab_v1_ut.
 ENDCLASS.
 
@@ -27,9 +31,18 @@ CLASS zcl_ab_v1_ut_excel IMPLEMENTATION.
     DATA(lv_n) = iv_col.
     WHILE lv_n > 0.
       DATA(lv_rem) = ( lv_n - 1 ) MOD 26.
-      rv   = |{ to_upper( CONV string( sy-abcde+lv_rem(1) ) ) }{ rv }|.
+      rv   = |{ sy-abcde+lv_rem(1) }{ rv }|.
       lv_n = ( lv_n - 1 ) DIV 26.
     ENDWHILE.
+  ENDMETHOD.
+
+
+  METHOD xesc.
+    rv = iv.
+    rv = replace( val = rv sub = '&' with = '&amp;'  occ = 0 ).
+    rv = replace( val = rv sub = '<' with = '&lt;'   occ = 0 ).
+    rv = replace( val = rv sub = '>' with = '&gt;'   occ = 0 ).
+    rv = replace( val = rv sub = '"' with = '&quot;' occ = 0 ).
   ENDMETHOD.
 
 
@@ -38,44 +51,81 @@ CLASS zcl_ab_v1_ut_excel IMPLEMENTATION.
                       CAST cl_abap_tabledescr(
                         cl_abap_typedescr=>describe_by_data( it_data ) )->get_table_line_type( ) ).
 
-    TRY.
-        DATA(lo_doc)   = xco_cp_xlsx=>document->empty( ).
-        DATA(lo_write) = lo_doc->write_access( ).
-        DATA(lo_ws)    = lo_write->get_workbook( )->worksheet->at_position( 1 ).
+    " ---- build worksheet rows (inline strings) --------------------------------
+    DATA lv_rows TYPE string.
 
-        " header row
-        DATA(lv_col) = 1.
-        LOOP AT lo_line->components INTO DATA(ls_c).
-          DATA(lv_text) = CONV string( ls_c-name ).
-          READ TABLE it_col_texts INTO DATA(ls_t) WITH KEY name = CONV #( ls_c-name ).
-          IF sy-subrc = 0.
-            lv_text = ls_t-value.
-          ENDIF.
-          lo_ws->cell( xco_cp_xlsx=>coordinate->for_cell_reference(
-                         CONV #( |{ col_letter( lv_col ) }1| ) )
-             )->value->write_string( lv_text ).
+    DATA(lv_col) = 1.
+    DATA lv_cells TYPE string.
+    LOOP AT lo_line->components INTO DATA(ls_c).
+      DATA(lv_text) = CONV string( ls_c-name ).
+      READ TABLE it_col_texts INTO DATA(ls_t) WITH KEY name = CONV #( ls_c-name ).
+      IF sy-subrc = 0.
+        lv_text = ls_t-value.
+      ENDIF.
+      lv_cells = lv_cells &&
+        |<c r="{ col_letter( lv_col ) }1" t="inlineStr"><is><t>{ xesc( lv_text ) }</t></is></c>|.
+      lv_col = lv_col + 1.
+    ENDLOOP.
+    lv_rows = |<row r="1">{ lv_cells }</row>|.
+
+    IF iv_header_only = abap_false.
+      DATA(lv_r) = 2.
+      LOOP AT it_data ASSIGNING FIELD-SYMBOL(<row>).
+        CLEAR lv_cells.
+        lv_col = 1.
+        LOOP AT lo_line->components INTO ls_c.
+          ASSIGN COMPONENT ls_c-name OF STRUCTURE <row> TO FIELD-SYMBOL(<f>).
+          lv_cells = lv_cells &&
+            |<c r="{ col_letter( lv_col ) }{ lv_r }" t="inlineStr"><is><t>{ xesc( |{ <f> }| ) }</t></is></c>|.
           lv_col = lv_col + 1.
         ENDLOOP.
+        lv_rows = lv_rows && |<row r="{ lv_r }">{ lv_cells }</row>|.
+        lv_r = lv_r + 1.
+      ENDLOOP.
+    ENDIF.
 
-        IF iv_header_only = abap_false.
-          DATA(lv_row) = 2.
-          LOOP AT it_data ASSIGNING FIELD-SYMBOL(<row>).
-            lv_col = 1.
-            LOOP AT lo_line->components INTO ls_c.
-              ASSIGN COMPONENT ls_c-name OF STRUCTURE <row> TO FIELD-SYMBOL(<f>).
-              lo_ws->cell( xco_cp_xlsx=>coordinate->for_cell_reference(
-                             CONV #( |{ col_letter( lv_col ) }{ lv_row }| ) )
-                 )->value->write_string( |{ <f> }| ).
-              lv_col = lv_col + 1.
-            ENDLOOP.
-            lv_row = lv_row + 1.
-          ENDLOOP.
-        ENDIF.
+    DATA(lv_sheet) =
+      |<?xml version="1.0" encoding="UTF-8" standalone="yes"?>| &&
+      |<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">| &&
+      |<sheetData>{ lv_rows }</sheetData></worksheet>|.
 
-        rv = lo_doc->get_content( ).
+    DATA(lv_ct) =
+      |<?xml version="1.0" encoding="UTF-8" standalone="yes"?>| &&
+      |<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">| &&
+      |<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>| &&
+      |<Default Extension="xml" ContentType="application/xml"/>| &&
+      |<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>| &&
+      |<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>| &&
+      |</Types>|.
 
+    DATA(lv_rels) =
+      |<?xml version="1.0" encoding="UTF-8" standalone="yes"?>| &&
+      |<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">| &&
+      |<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>| &&
+      |</Relationships>|.
+
+    DATA(lv_wb) =
+      |<?xml version="1.0" encoding="UTF-8" standalone="yes"?>| &&
+      |<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" | &&
+      |xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">| &&
+      |<sheets><sheet name="Sheet1" sheetId="1" r:id="rId1"/></sheets></workbook>|.
+
+    DATA(lv_wbrels) =
+      |<?xml version="1.0" encoding="UTF-8" standalone="yes"?>| &&
+      |<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">| &&
+      |<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>| &&
+      |</Relationships>|.
+
+    TRY.
+        DATA(lo_zip) = NEW cl_abap_zip( ).
+        lo_zip->add( name = `[Content_Types].xml`        content = cl_abap_codepage=>convert_to( lv_ct ) ).
+        lo_zip->add( name = `_rels/.rels`                content = cl_abap_codepage=>convert_to( lv_rels ) ).
+        lo_zip->add( name = `xl/workbook.xml`            content = cl_abap_codepage=>convert_to( lv_wb ) ).
+        lo_zip->add( name = `xl/_rels/workbook.xml.rels` content = cl_abap_codepage=>convert_to( lv_wbrels ) ).
+        lo_zip->add( name = `xl/worksheets/sheet1.xml`   content = cl_abap_codepage=>convert_to( lv_sheet ) ).
+        rv = lo_zip->save( ).
       CATCH cx_root INTO DATA(lx).
-        zcx_ab_v1_ut=>raise_t100( iv_msgno = '003' iv_msgv1 = lx->get_text( ) io_previous = lx ).
+        zcx_ab_v1_ut=>raise_t100( iv_msgno = '003' iv_msgv1 = lx->get_text( ) io_previous = lx ) ##NO_TEXT.
     ENDTRY.
   ENDMETHOD.
 
@@ -93,7 +143,7 @@ CLASS zcl_ab_v1_ut_excel IMPLEMENTATION.
         DATA(lo_tab) = cl_abap_tabledescr=>create( p_line_type = lo_struct ).
         CREATE DATA lr_tab TYPE HANDLE lo_tab.
       CATCH cx_root INTO DATA(lx).
-        zcx_ab_v1_ut=>raise_t100( iv_msgno = '019' iv_msgv1 = 'structure' iv_msgv2 = iv_structure io_previous = lx ).
+        zcx_ab_v1_ut=>raise_t100( iv_msgno = '019' iv_msgv1 = 'structure' iv_msgv2 = iv_structure io_previous = lx ) ##NO_TEXT.
     ENDTRY.
 
     ASSIGN lr_tab->* TO FIELD-SYMBOL(<tab>).
@@ -102,23 +152,24 @@ CLASS zcl_ab_v1_ut_excel IMPLEMENTATION.
 
 
   METHOD zif_ab_v1_ut_excel~read.
-    DATA(lo_tgt_line) = CAST cl_abap_structdescr(
-                          CAST cl_abap_tabledescr(
-                            cl_abap_typedescr=>describe_by_data( et_data ) )->get_table_line_type( ) ).
-
     TRY.
         DATA(lo_xl) = NEW cl_fdt_xl_spreadsheet( document_name = 'upload.xlsx'
                                                  xdocument     = iv_xlsx ).
         lo_xl->if_fdt_doc_spreadsheet~get_worksheet_names( IMPORTING worksheet_names = DATA(lt_ws) ).
         IF lt_ws IS INITIAL.
-          zcx_ab_v1_ut=>raise_t100( iv_msgno = '003' iv_msgv1 = 'no worksheet' ).
+          zcx_ab_v1_ut=>raise_t100( iv_msgno = '003' iv_msgv1 = 'no worksheet' ) ##NO_TEXT.
         ENDIF.
 
-        DATA(lv_ws) = COND string( WHEN iv_sheet IS NOT INITIAL THEN CONV string( iv_sheet ) ELSE lt_ws[ 1 ] ).
+        DATA lv_ws TYPE string.
+        IF iv_sheet IS NOT INITIAL.
+          lv_ws = iv_sheet.
+        ELSE.
+          lv_ws = lt_ws[ 1 ].
+        ENDIF.
         DATA(lo_src) = lo_xl->if_fdt_doc_spreadsheet~get_itab_from_worksheet( lv_ws ).
 
       CATCH cx_root INTO DATA(lx).
-        zcx_ab_v1_ut=>raise_t100( iv_msgno = '003' iv_msgv1 = lx->get_text( ) io_previous = lx ).
+        zcx_ab_v1_ut=>raise_t100( iv_msgno = '003' iv_msgv1 = lx->get_text( ) io_previous = lx ) ##NO_TEXT.
     ENDTRY.
 
     ASSIGN lo_src->* TO FIELD-SYMBOL(<src>).
@@ -136,10 +187,13 @@ CLASS zcl_ab_v1_ut_excel IMPLEMENTATION.
       APPEND INITIAL LINE TO et_data ASSIGNING FIELD-SYMBOL(<trow>).
 
       LOOP AT lo_src_line->components INTO DATA(ls_sc).
-        " resolve target component: explicit mapping wins, else same name
         DATA lv_tgt TYPE string.
         READ TABLE it_mapping INTO DATA(ls_map) WITH KEY name = CONV #( ls_sc-name ).
-        lv_tgt = COND #( WHEN sy-subrc = 0 THEN ls_map-value ELSE CONV string( ls_sc-name ) ).
+        IF sy-subrc = 0.
+          lv_tgt = ls_map-value.
+        ELSE.
+          lv_tgt = ls_sc-name.
+        ENDIF.
 
         ASSIGN COMPONENT ls_sc-name OF STRUCTURE <srow> TO FIELD-SYMBOL(<sv>).
         CHECK sy-subrc = 0.
@@ -154,7 +208,7 @@ CLASS zcl_ab_v1_ut_excel IMPLEMENTATION.
         TRY.
             <tv> = <sv>.
           CATCH cx_sy_conversion_error.
-            APPEND VALUE #( row = lv_row_no column = CONV #( ls_sc-name ) reason = 'conversion error' ) TO et_errors.
+            APPEND VALUE #( row = lv_row_no column = CONV #( ls_sc-name ) reason = 'conversion error' ) TO et_errors ##NO_TEXT.
         ENDTRY.
       ENDLOOP.
     ENDLOOP.

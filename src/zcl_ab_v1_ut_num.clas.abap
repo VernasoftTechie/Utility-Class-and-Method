@@ -56,10 +56,11 @@ CLASS zcl_ab_v1_ut_num IMPLEMENTATION.
 
 
   METHOD zif_ab_v1_ut_num~status.
+    DATA ls_int TYPE inriv.
     CALL FUNCTION 'NUMBER_GET_INFO'
-      EXPORTING  object          = iv_object
-                 nr_range_nr     = iv_interval
-      IMPORTING  interval        = DATA(ls_int)
+      EXPORTING  object            = iv_object
+                 nr_range_nr       = iv_interval
+      IMPORTING  interval          = ls_int
       EXCEPTIONS interval_not_found = 1
                  object_not_found   = 2
                  OTHERS             = 3.

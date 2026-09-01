@@ -25,9 +25,9 @@ CLASS zcl_ab_v1_ut_db IMPLEMENTATION.
 
   METHOD validated_entity.
     TRY.
-        rv = cl_abap_dyn_prg=>check_table_or_view_name_str( to_upper( iv_entity ) ).
+        rv = cl_abap_dyn_prg=>check_table_or_view_name_str( val = to_upper( iv_entity ) ).
       CATCH cx_root INTO DATA(lx).
-        zcx_ab_v1_ut=>raise_t100( iv_msgno = '019' iv_msgv1 = 'entity' iv_msgv2 = iv_entity io_previous = lx ).
+        zcx_ab_v1_ut=>raise_t100( iv_msgno = '019' iv_msgv1 = 'entity' iv_msgv2 = iv_entity io_previous = lx ) ##NO_TEXT.
     ENDTRY.
   ENDMETHOD.
 

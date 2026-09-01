@@ -10,7 +10,7 @@ INTERFACE zif_ab_v1_ut_cfg
 
   METHODS tvarv_range
     IMPORTING iv_name  TYPE rvari_vnam
-    EXPORTING et_range TYPE ANY TABLE.
+    EXPORTING et_range TYPE STANDARD TABLE.
 
   METHODS is_feature_on
     IMPORTING iv_feature TYPE string

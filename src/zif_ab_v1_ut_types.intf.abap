@@ -15,17 +15,15 @@ INTERFACE zif_ab_v1_ut_types
   "! RAP execution-phase hint that drives the Defer guard in ZCL_AB_V1_UT.
   TYPES ty_phase TYPE i.
   CONSTANTS:
+    "! RAP phase hints. 0 = classic report/FM/job (Defer allowed);
+    "! 1 = interaction/draft (Defer refused); 2 = early save; 3 = save_modified
+    "! / adjust_numbers (Defer allowed); 4 = after COMMIT WORK (Defer allowed).
     BEGIN OF c_phase,
-      "! Classic report / function module / background job - Defer methods allowed
       unknown      TYPE ty_phase VALUE 0,
-      "! RAP interaction / draft phase - Defer methods refused
       interaction  TYPE ty_phase VALUE 1,
-      "! RAP early save phase
-      early_save    TYPE ty_phase VALUE 2,
-      "! RAP save_modified / adjust_numbers - Defer methods allowed
-      late_save     TYPE ty_phase VALUE 3,
-      "! After COMMIT WORK - Defer methods allowed
-      after_commit  TYPE ty_phase VALUE 4,
+      early_save   TYPE ty_phase VALUE 2,
+      late_save    TYPE ty_phase VALUE 3,
+      after_commit TYPE ty_phase VALUE 4,
     END OF c_phase.
 
   "! Generic business-object key for attachment services.

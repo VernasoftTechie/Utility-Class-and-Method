@@ -51,7 +51,11 @@ CLASS zcl_ab_v1_ut_sys IMPLEMENTATION.
 
 
   METHOD zif_ab_v1_ut_sys~timer_start.
-    rv_handle = cl_system_uuid=>create_uuid_c32_static( ).
+    TRY.
+        rv_handle = cl_system_uuid=>create_uuid_c32_static( ).
+      CATCH cx_uuid_error.
+        rv_handle = |{ sy-datum }{ sy-uzeit }{ sy-timlo }{ lines( mt_timers ) }|.
+    ENDTRY.
     INSERT VALUE #( handle = rv_handle
                     timer  = cl_abap_runtime=>create_hr_timer( ) ) INTO TABLE mt_timers.
   ENDMETHOD.

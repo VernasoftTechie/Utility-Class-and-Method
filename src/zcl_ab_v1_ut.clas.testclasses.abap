@@ -21,9 +21,9 @@ CLASS ltc_facade IMPLEMENTATION.
 
   METHOD accessors_are_singletons.
     cl_abap_unit_assert=>assert_bound( zcl_ab_v1_ut=>str( ) ).
-    cl_abap_unit_assert=>assert_equals( exp = zcl_ab_v1_ut=>str( )  act = zcl_ab_v1_ut=>str( ) ).
-    cl_abap_unit_assert=>assert_equals( exp = zcl_ab_v1_ut=>json( ) act = zcl_ab_v1_ut=>json( ) ).
-    cl_abap_unit_assert=>assert_equals( exp = zcl_ab_v1_ut=>conv( ) act = zcl_ab_v1_ut=>conv( ) ).
+    cl_abap_unit_assert=>assert_true( xsdbool( zcl_ab_v1_ut=>str( )  = zcl_ab_v1_ut=>str( ) ) ).
+    cl_abap_unit_assert=>assert_true( xsdbool( zcl_ab_v1_ut=>json( ) = zcl_ab_v1_ut=>json( ) ) ).
+    cl_abap_unit_assert=>assert_true( xsdbool( zcl_ab_v1_ut=>conv( ) = zcl_ab_v1_ut=>conv( ) ) ).
     cl_abap_unit_assert=>assert_bound( zcl_ab_v1_ut=>attach( ) ).
     cl_abap_unit_assert=>assert_bound( zcl_ab_v1_ut=>tab( ) ).
     cl_abap_unit_assert=>assert_bound( zcl_ab_v1_ut=>msg( ) ).
@@ -34,10 +34,10 @@ CLASS ltc_facade IMPLEMENTATION.
   METHOD injection_and_reset.
     DATA(lo_double) = CAST zif_ab_v1_ut_str( cl_abap_testdouble=>create( 'ZIF_AB_V1_UT_STR' ) ).
     zcl_ab_v1_ut=>set_str( lo_double ).
-    cl_abap_unit_assert=>assert_equals( exp = lo_double act = zcl_ab_v1_ut=>str( ) ).
+    cl_abap_unit_assert=>assert_true( xsdbool( lo_double = zcl_ab_v1_ut=>str( ) ) ).
 
     zcl_ab_v1_ut=>reset( ).
-    cl_abap_unit_assert=>assert_differs( exp = lo_double act = zcl_ab_v1_ut=>str( ) ).
+    cl_abap_unit_assert=>assert_false( xsdbool( lo_double = zcl_ab_v1_ut=>str( ) ) ).
   ENDMETHOD.
 
   METHOD phase_roundtrip.

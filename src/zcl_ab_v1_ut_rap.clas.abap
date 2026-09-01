@@ -14,7 +14,10 @@ ENDCLASS.
 CLASS zcl_ab_v1_ut_rap IMPLEMENTATION.
 
   METHOD zif_ab_v1_ut_rap~new_cid.
-    rv = cl_system_uuid=>create_uuid_c22_static( ).
+    TRY.
+        rv = cl_system_uuid=>create_uuid_c22_static( ).
+      CATCH cx_uuid_error ##NO_HANDLER.
+    ENDTRY.
   ENDMETHOD.
 
 

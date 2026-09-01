@@ -146,10 +146,8 @@ CLASS zcl_ab_v1_ut_conv IMPLEMENTATION.
 
     CASE to_upper( iv_kind ).
       WHEN zif_ab_v1_ut_conv~c_period-week.
-        DATA lv_dow TYPE p.
-        CALL FUNCTION 'DATE_COMPUTE_DAY'
-          EXPORTING date = iv_date
-          IMPORTING day  = lv_dow.
+        " 1900-01-01 was a Monday
+        DATA(lv_dow) = ( ( iv_date - CONV d( '19000101' ) ) MOD 7 ) + 1.
         ev_first = iv_date - ( lv_dow - 1 ).
         ev_last  = ev_first + 6.
 
@@ -184,11 +182,11 @@ CLASS zcl_ab_v1_ut_conv IMPLEMENTATION.
           CALL FUNCTION 'FIRST_DAY_IN_PERIOD_GET'
             EXPORTING i_gjahr = lv_gjahr i_periv = iv_fiscal_variant i_poper = '001'
             IMPORTING e_date  = ev_first
-            EXCEPTIONS OTHERS = 1.
+            EXCEPTIONS OTHERS = 0.
           CALL FUNCTION 'LAST_DAY_IN_PERIOD_GET'
             EXPORTING i_gjahr = lv_gjahr i_periv = iv_fiscal_variant i_poper = '012'
             IMPORTING e_date  = ev_last
-            EXCEPTIONS OTHERS = 1.
+            EXCEPTIONS OTHERS = 0.
         ENDIF.
 
       WHEN OTHERS.
@@ -204,16 +202,15 @@ CLASS zcl_ab_v1_ut_conv IMPLEMENTATION.
       IMPORTING  week         = lv_week
       EXCEPTIONS date_invalid = 1
                  OTHERS       = 2.
-    rv = lv_week.
+    IF sy-subrc = 0.
+      rv = lv_week.
+    ENDIF.
   ENDMETHOD.
 
 
   METHOD zif_ab_v1_ut_conv~weekday.
-    DATA lv_dow TYPE p.
-    CALL FUNCTION 'DATE_COMPUTE_DAY'
-      EXPORTING date = iv_date
-      IMPORTING day  = lv_dow.
-    rv = lv_dow.
+    " 1900-01-01 was a Monday -> 1 = Monday .. 7 = Sunday
+    rv = ( ( iv_date - CONV d( '19000101' ) ) MOD 7 ) + 1.
   ENDMETHOD.
 
 

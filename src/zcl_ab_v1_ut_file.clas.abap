@@ -37,10 +37,13 @@ CLASS zcl_ab_v1_ut_file IMPLEMENTATION.
 
 
   METHOD guard_dataset.
+    DATA lv_fn TYPE c LENGTH 1024.
+    lv_fn = iv_path.
+
     AUTHORITY-CHECK OBJECT 'S_DATASET'
       ID 'PROGRAM'  FIELD sy-cprog
       ID 'ACTVT'    FIELD iv_activity
-      ID 'FILENAME' FIELD iv_path.
+      ID 'FILENAME' FIELD lv_fn.
     IF sy-subrc <> 0.
       zcx_ab_v1_ut=>raise_t100( iv_msgno = '015' iv_msgv1 = iv_path ).
     ENDIF.

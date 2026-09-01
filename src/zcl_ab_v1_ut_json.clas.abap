@@ -17,12 +17,16 @@ ENDCLASS.
 CLASS zcl_ab_v1_ut_json IMPLEMENTATION.
 
   METHOD zif_ab_v1_ut_json~serialize.
-    rv_json = /ui2/cl_json=>serialize(
-                data        = iv_data
-                compress    = xsdbool( iv_keep_initial = abap_false )
-                pretty_name = COND #( WHEN iv_camel_case = abap_true
-                                      THEN /ui2/cl_json=>pretty_mode-camel_case
-                                      ELSE /ui2/cl_json=>pretty_mode-none ) ).
+    DATA lv_pn LIKE /ui2/cl_json=>pretty_mode-none.
+    IF iv_camel_case = abap_true.
+      lv_pn = /ui2/cl_json=>pretty_mode-camel_case.
+    ELSE.
+      lv_pn = /ui2/cl_json=>pretty_mode-none.
+    ENDIF.
+
+    rv_json = /ui2/cl_json=>serialize( data        = iv_data
+                                       compress    = xsdbool( iv_keep_initial = abap_false )
+                                       pretty_name = lv_pn ).
     IF iv_pretty = abap_true.
       rv_json = zif_ab_v1_ut_json~pretty( rv_json ).
     ENDIF.
@@ -30,12 +34,16 @@ CLASS zcl_ab_v1_ut_json IMPLEMENTATION.
 
 
   METHOD zif_ab_v1_ut_json~deserialize.
-    /ui2/cl_json=>deserialize(
-      EXPORTING json        = iv_json
-                pretty_name = COND #( WHEN iv_camel_case = abap_true
-                                      THEN /ui2/cl_json=>pretty_mode-camel_case
-                                      ELSE /ui2/cl_json=>pretty_mode-none )
-      CHANGING  data        = ca_data ).
+    DATA lv_pn LIKE /ui2/cl_json=>pretty_mode-none.
+    IF iv_camel_case = abap_true.
+      lv_pn = /ui2/cl_json=>pretty_mode-camel_case.
+    ELSE.
+      lv_pn = /ui2/cl_json=>pretty_mode-none.
+    ENDIF.
+
+    /ui2/cl_json=>deserialize( EXPORTING json        = iv_json
+                                         pretty_name = lv_pn
+                               CHANGING  data        = ca_data ).
   ENDMETHOD.
 
 
@@ -90,7 +98,7 @@ CLASS zcl_ab_v1_ut_json IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD describe_node.
+  METHOD describe_node ##NO_TEXT.
     CASE io_descr->kind.
       WHEN cl_abap_typedescr=>kind_struct.
         DATA(lo_s) = CAST cl_abap_structdescr( io_descr ).

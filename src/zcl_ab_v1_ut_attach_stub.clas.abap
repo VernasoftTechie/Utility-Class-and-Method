@@ -31,15 +31,24 @@ CLASS zcl_ab_v1_ut_attach_stub IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD zif_ab_v1_ut_attach~new_guid_x16.
-    rv = cl_system_uuid=>create_uuid_x16_static( ).
+    TRY.
+        rv = cl_system_uuid=>create_uuid_x16_static( ).
+      CATCH cx_uuid_error ##NO_HANDLER.
+    ENDTRY.
   ENDMETHOD.
 
   METHOD zif_ab_v1_ut_attach~new_guid_c32.
-    rv = cl_system_uuid=>create_uuid_c32_static( ).
+    TRY.
+        rv = cl_system_uuid=>create_uuid_c32_static( ).
+      CATCH cx_uuid_error ##NO_HANDLER.
+    ENDTRY.
   ENDMETHOD.
 
   METHOD zif_ab_v1_ut_attach~new_guid_c22.
-    rv = cl_system_uuid=>create_uuid_c22_static( ).
+    TRY.
+        rv = cl_system_uuid=>create_uuid_c22_static( ).
+      CATCH cx_uuid_error ##NO_HANDLER.
+    ENDTRY.
   ENDMETHOD.
 
   METHOD zif_ab_v1_ut_attach~attach.

@@ -12,8 +12,8 @@ CLASS ltc_conv DEFINITION FINAL FOR TESTING
     METHODS add_years_t      FOR TESTING.
     METHODS diffs            FOR TESTING.
     METHODS age_t            FOR TESTING.
-    METHODS period_month     FOR TESTING.
-    METHODS period_quarter   FOR TESTING.
+    METHODS period_month     FOR TESTING RAISING zcx_ab_v1_ut.
+    METHODS period_quarter   FOR TESTING RAISING zcx_ab_v1_ut.
     METHODS weekday_range    FOR TESTING.
     METHODS round_modes      FOR TESTING.
     METHODS ts_roundtrip     FOR TESTING.

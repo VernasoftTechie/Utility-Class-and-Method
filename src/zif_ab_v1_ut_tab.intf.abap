@@ -32,8 +32,8 @@ INTERFACE zif_ab_v1_ut_tab
     CHANGING  ct_data   TYPE STANDARD TABLE.
 
   METHODS diff
-    IMPORTING it_old        TYPE ANY TABLE
-              it_new        TYPE ANY TABLE
+    IMPORTING it_old        TYPE STANDARD TABLE
+              it_new        TYPE STANDARD TABLE
               it_key_fields TYPE zif_ab_v1_ut_types=>ty_string_tab
     EXPORTING et_insert     TYPE STANDARD TABLE
               et_update     TYPE STANDARD TABLE
@@ -41,10 +41,10 @@ INTERFACE zif_ab_v1_ut_tab
     RAISING   zcx_ab_v1_ut.
 
   METHODS to_ranges
-    IMPORTING it_values TYPE ANY TABLE
+    IMPORTING it_values TYPE STANDARD TABLE
               iv_sign   TYPE c DEFAULT 'I'
               iv_option TYPE c DEFAULT 'EQ'
-    EXPORTING et_range  TYPE ANY TABLE.
+    EXPORTING et_range  TYPE STANDARD TABLE.
 
   METHODS chunk
     IMPORTING it_data       TYPE ANY TABLE
