@@ -41,6 +41,7 @@ On approval, per `01_architecture.md` §12 build order:
 | Version | Date | Author | Summary |
 |---|---|---|---|
 | — | 2026-08-31 | Vernasoft AI | Document set created; architecture v2 (full 18-area catalogue, gated helpers included, `ZAB_V1_UT_*` naming) drafted for approval. |
+| — | 2026-09-01 | Vernasoft AI | Approved. Build stages 1–3a pushed. Activation fixes: data element `ZAB_V1_UT_AREA` label lengths; **`RETURNING` params changed from generic `TYPE p` to `TYPE decfloat34`** in `_STR` (`to_amount`, `to_quantity`) and `_CONV` (`convert_unit`, `round`); `_CONV` `iv_rate_type` `kurst_curr`→`kurst`; `_NUM`/`_SYS` packed exports → `decfloat34`; `_MAIL` `ty_mail-to`→`recipients`, `commit`→`commit_work` (reserved-word safety). |
 
 ---
 

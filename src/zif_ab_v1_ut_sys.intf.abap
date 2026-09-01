@@ -26,8 +26,8 @@ INTERFACE zif_ab_v1_ut_sys
 
   METHODS timer_stop
     IMPORTING iv_handle  TYPE string
-    EXPORTING ev_seconds TYPE p
-              ev_cpu_ms  TYPE p.
+    EXPORTING ev_seconds TYPE decfloat34
+              ev_cpu_ms  TYPE decfloat34.
 
   METHODS text
     IMPORTING iv_kind   TYPE string

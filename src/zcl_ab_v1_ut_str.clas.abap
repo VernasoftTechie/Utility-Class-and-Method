@@ -260,11 +260,7 @@ CLASS zcl_ab_v1_ut_str IMPLEMENTATION.
 
 
   METHOD zif_ab_v1_ut_str~base64_decode.
-    TRY.
-        rv = cl_web_http_utility=>decode_x_base64( iv_b64 ).
-      CATCH cx_root INTO DATA(lx).
-        zcx_ab_v1_ut=>raise_t100( iv_msgno = '020' iv_msgv1 = 'base64' iv_msgv2 = 'xstring' io_previous = lx ).
-    ENDTRY.
+    rv = cl_web_http_utility=>decode_x_base64( iv_b64 ).
   ENDMETHOD.
 
 

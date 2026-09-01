@@ -26,7 +26,7 @@ INTERFACE zif_ab_v1_ut_num
     IMPORTING iv_object     TYPE nrobj
               iv_interval   TYPE nrnr
     EXPORTING ev_current    TYPE string
-              ev_percentage TYPE p
+              ev_percentage TYPE decfloat34
     RAISING   zcx_ab_v1_ut.
 
 ENDINTERFACE.

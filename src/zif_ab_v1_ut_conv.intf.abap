@@ -103,8 +103,8 @@ INTERFACE zif_ab_v1_ut_conv
               iv_from      TYPE waers
               iv_to        TYPE waers
               iv_date      TYPE d DEFAULT sy-datum
-              iv_rate_type TYPE kurst_curr DEFAULT 'M'
-    EXPORTING ev_amount    TYPE p
+              iv_rate_type TYPE kurst DEFAULT 'M'
+    EXPORTING ev_amount    TYPE decfloat34
               ev_rate      TYPE f
     RAISING   zcx_ab_v1_ut.
 
@@ -113,13 +113,13 @@ INTERFACE zif_ab_v1_ut_conv
               iv_from     TYPE meins
               iv_to       TYPE meins
               iv_material TYPE matnr OPTIONAL
-    RETURNING VALUE(rv)   TYPE p
+    RETURNING VALUE(rv)   TYPE decfloat34
     RAISING   zcx_ab_v1_ut.
 
   METHODS round
     IMPORTING iv_value    TYPE numeric
               iv_decimals TYPE i DEFAULT 2
               iv_mode     TYPE string DEFAULT c_round-commercial
-    RETURNING VALUE(rv)   TYPE p.
+    RETURNING VALUE(rv)   TYPE decfloat34.
 
 ENDINTERFACE.

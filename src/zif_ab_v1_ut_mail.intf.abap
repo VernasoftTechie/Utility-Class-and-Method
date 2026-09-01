@@ -14,7 +14,7 @@ INTERFACE zif_ab_v1_ut_mail
   TYPES:
     BEGIN OF ty_mail,
       sender           TYPE string,
-      to               TYPE zif_ab_v1_ut_types=>ty_string_tab,
+      recipients       TYPE zif_ab_v1_ut_types=>ty_string_tab,
       cc               TYPE zif_ab_v1_ut_types=>ty_string_tab,
       bcc              TYPE zif_ab_v1_ut_types=>ty_string_tab,
       subject          TYPE string,
@@ -24,7 +24,7 @@ INTERFACE zif_ab_v1_ut_mail
       importance       TYPE c LENGTH 1,
       send_immediately TYPE abap_bool,
       request_status   TYPE abap_bool,
-      commit           TYPE abap_bool,
+      commit_work      TYPE abap_bool,
     END OF ty_mail.
 
   "! DEFER

@@ -181,12 +181,12 @@ INTERFACE zif_ab_v1_ut_str PUBLIC.
 
   METHODS to_amount   IMPORTING iv_text TYPE string iv_currency TYPE waers_curc OPTIONAL
                                 iv_notation TYPE ty_notation DEFAULT c_notation-raw
-                      RETURNING VALUE(rv_amount) TYPE p                RAISING zcx_ab_v1_ut. " [C]
+                      RETURNING VALUE(rv_amount) TYPE decfloat34       RAISING zcx_ab_v1_ut. " [C]
   METHODS from_amount IMPORTING iv_amount TYPE numeric iv_currency TYPE waers_curc OPTIONAL
                                 iv_notation TYPE ty_notation DEFAULT c_notation-raw
                       RETURNING VALUE(rv_text) TYPE string.                                 " [C]
   METHODS to_quantity IMPORTING iv_text TYPE string iv_unit TYPE meins OPTIONAL
-                      RETURNING VALUE(rv_qty) TYPE p                    RAISING zcx_ab_v1_ut.
+                      RETURNING VALUE(rv_qty) TYPE decfloat34          RAISING zcx_ab_v1_ut.
   METHODS from_quantity IMPORTING iv_qty TYPE numeric iv_unit TYPE meins OPTIONAL
                       RETURNING VALUE(rv_text) TYPE string.
   METHODS to_date     IMPORTING iv_text TYPE string iv_format TYPE string OPTIONAL
@@ -263,14 +263,14 @@ INTERFACE zif_ab_v1_ut_conv PUBLIC.
   METHODS ts_merge     IMPORTING iv_date TYPE d iv_time TYPE t iv_msec TYPE i DEFAULT 0
                        RETURNING VALUE(rv) TYPE timestampl.
   METHODS convert_currency IMPORTING iv_amount TYPE numeric iv_from TYPE waers iv_to TYPE waers
-                                     iv_date TYPE d DEFAULT sy-datum iv_rate_type TYPE kurst_curr DEFAULT 'M'
-                       EXPORTING ev_amount TYPE p ev_rate TYPE f RAISING zcx_ab_v1_ut.
+                                     iv_date TYPE d DEFAULT sy-datum iv_rate_type TYPE kurst DEFAULT 'M'
+                       EXPORTING ev_amount TYPE decfloat34 ev_rate TYPE f RAISING zcx_ab_v1_ut.
   METHODS convert_unit IMPORTING iv_qty TYPE numeric iv_from TYPE meins iv_to TYPE meins
                                  iv_material TYPE matnr OPTIONAL
-                       RETURNING VALUE(rv) TYPE p RAISING zcx_ab_v1_ut.
+                       RETURNING VALUE(rv) TYPE decfloat34 RAISING zcx_ab_v1_ut.
   METHODS round        IMPORTING iv_value TYPE numeric iv_decimals TYPE i DEFAULT 2
                                  iv_mode TYPE string DEFAULT 'COMMERCIAL'
-                       RETURNING VALUE(rv) TYPE p.
+                       RETURNING VALUE(rv) TYPE decfloat34.
 ENDINTERFACE.
 ```
 
@@ -497,7 +497,7 @@ INTERFACE zif_ab_v1_ut_num PUBLIC.
   METHODS next_bulk   IMPORTING iv_object TYPE inri-object iv_interval TYPE inri-nrrangenr iv_count TYPE i
                       RETURNING VALUE(rt_numbers) TYPE zif_ab_v1_ut_types=>ty_string_tab RAISING zcx_ab_v1_ut. " [D]
   METHODS status      IMPORTING iv_object TYPE inri-object iv_interval TYPE inri-nrrangenr
-                      EXPORTING ev_current TYPE string ev_percentage TYPE p RAISING zcx_ab_v1_ut. " [C]
+                      EXPORTING ev_current TYPE string ev_percentage TYPE decfloat34 RAISING zcx_ab_v1_ut. " [C]
 ENDINTERFACE.
 ```
 
@@ -509,7 +509,7 @@ INTERFACE zif_ab_v1_ut_mail PUBLIC.
          ty_attachment_tab TYPE STANDARD TABLE OF ty_attachment WITH EMPTY KEY,
          BEGIN OF ty_mail,
            sender            TYPE string,
-           to                TYPE zif_ab_v1_ut_types=>ty_string_tab,
+           recipients        TYPE zif_ab_v1_ut_types=>ty_string_tab,
            cc                TYPE zif_ab_v1_ut_types=>ty_string_tab,
            bcc               TYPE zif_ab_v1_ut_types=>ty_string_tab,
            subject           TYPE string,
@@ -519,7 +519,7 @@ INTERFACE zif_ab_v1_ut_mail PUBLIC.
            importance        TYPE c LENGTH 1,       " H/M/L
            send_immediately  TYPE abap_bool,
            request_status    TYPE abap_bool,
-           commit            TYPE abap_bool,
+           commit_work       TYPE abap_bool,
          END OF ty_mail.
   METHODS send            IMPORTING is_mail TYPE ty_mail RETURNING VALUE(rv_send_request_id) TYPE string
                           RAISING zcx_ab_v1_ut.                                     " [D]
@@ -586,7 +586,7 @@ INTERFACE zif_ab_v1_ut_sys PUBLIC.
   METHODS object_exists IMPORTING iv_type TYPE string  " TABL|STRU|CLAS|INTF|DDLS|FUNC
                                   iv_name TYPE string RETURNING VALUE(rv) TYPE abap_bool.
   METHODS timer_start   RETURNING VALUE(rv_handle) TYPE string.
-  METHODS timer_stop    IMPORTING iv_handle TYPE string EXPORTING ev_seconds TYPE p ev_cpu_ms TYPE p.
+  METHODS timer_stop    IMPORTING iv_handle TYPE string EXPORTING ev_seconds TYPE decfloat34 ev_cpu_ms TYPE decfloat34.
   METHODS text          IMPORTING iv_kind TYPE string  " OTR|SYMBOL|MSG_LONG
                                   iv_key TYPE string RETURNING VALUE(rv) TYPE string.
 ENDINTERFACE.

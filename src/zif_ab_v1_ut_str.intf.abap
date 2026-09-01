@@ -14,7 +14,7 @@ INTERFACE zif_ab_v1_ut_str
     BEGIN OF c_algo,
       md5    TYPE string VALUE 'MD5',
       sha1   TYPE string VALUE 'SHA1',
-      sha256 TYPE string VALUE 'SHA-256',
+      sha256 TYPE string VALUE 'SHA256',
     END OF c_algo.
   CONSTANTS:
     BEGIN OF c_kind,
@@ -29,7 +29,7 @@ INTERFACE zif_ab_v1_ut_str
     IMPORTING iv_text        TYPE string
               iv_currency    TYPE waers_curc OPTIONAL
               iv_notation    TYPE ty_notation DEFAULT c_notation-raw
-    RETURNING VALUE(rv_amount) TYPE p
+    RETURNING VALUE(rv_amount) TYPE decfloat34
     RAISING   zcx_ab_v1_ut.
 
   METHODS from_amount
@@ -41,7 +41,7 @@ INTERFACE zif_ab_v1_ut_str
   METHODS to_quantity
     IMPORTING iv_text      TYPE string
               iv_unit      TYPE meins OPTIONAL
-    RETURNING VALUE(rv_qty) TYPE p
+    RETURNING VALUE(rv_qty) TYPE decfloat34
     RAISING   zcx_ab_v1_ut.
 
   METHODS from_quantity
