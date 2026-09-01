@@ -7,14 +7,27 @@ CLASS zcl_ab_v1_ut_num DEFINITION
     INTERFACES zif_ab_v1_ut_num.
   PROTECTED SECTION.
   PRIVATE SECTION.
+    METHODS guard_object
+      IMPORTING iv_object TYPE nrobj
+      RAISING   zcx_ab_v1_ut.
 ENDCLASS.
 
 
 
 CLASS zcl_ab_v1_ut_num IMPLEMENTATION.
 
+  METHOD guard_object.
+    SELECT SINGLE object FROM tnro INTO @DATA(lv_o) WHERE object = @iv_object.
+    IF sy-subrc <> 0.
+      zcx_ab_v1_ut=>raise_t100( iv_msgno = '016' iv_msgv1 = |{ iv_object }|
+                                iv_msgv2 = |number range object does not exist| ) ##NO_TEXT.
+    ENDIF.
+  ENDMETHOD.
+
+
   METHOD zif_ab_v1_ut_num~next.
     zcl_ab_v1_ut_phase=>assert_defer_allowed( 'next' ).
+    guard_object( iv_object ).
 
     TRY.
         cl_numberrange_runtime=>number_get(
@@ -34,6 +47,7 @@ CLASS zcl_ab_v1_ut_num IMPLEMENTATION.
 
   METHOD zif_ab_v1_ut_num~next_bulk.
     zcl_ab_v1_ut_phase=>assert_defer_allowed( 'next_bulk' ).
+    guard_object( iv_object ).
 
     TRY.
         cl_numberrange_runtime=>number_get(
@@ -56,6 +70,8 @@ CLASS zcl_ab_v1_ut_num IMPLEMENTATION.
 
 
   METHOD zif_ab_v1_ut_num~status.
+    guard_object( iv_object ).
+
     DATA ls_int TYPE inriv.
     CALL FUNCTION 'NUMBER_GET_INFO'
       EXPORTING  object            = iv_object
