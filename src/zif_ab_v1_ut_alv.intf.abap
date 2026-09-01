@@ -20,20 +20,4 @@ INTERFACE zif_ab_v1_ut_alv
     RETURNING VALUE(rt_fcat) TYPE lvc_t_fcat
     RAISING   zcx_ab_v1_ut.
 
-  METHODS layout_save
-    IMPORTING iv_report  TYPE sy-repid
-              iv_variant TYPE slis_vari
-              is_layout  TYPE any
-    RAISING   zcx_ab_v1_ut.
-
-  METHODS layout_load
-    IMPORTING iv_report  TYPE sy-repid
-              iv_variant TYPE slis_vari
-    EXPORTING es_layout  TYPE any
-    RAISING   zcx_ab_v1_ut.
-
-  METHODS toolbar
-    IMPORTING it_buttons TYPE zif_ab_v1_ut_types=>ty_nv_tab
-              io_handler TYPE REF TO object.
-
 ENDINTERFACE.
