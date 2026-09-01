@@ -4,7 +4,7 @@
 **Status:** DRAFT – awaiting architecture approval (Rulebook §8, step 2)
 **Platform:** SAP S/4HANA 2023 (on-premise), Standard ABAP, Clean-Core-aligned
 **Repository:** https://github.com/VernasoftTechie/Utility-Class-and-Method
-**Package:** assigned manually during abapGit pull (framework creates **no** package)
+**Package:** `ZABAP_UTIL` (all objects; link the repo to it on abapGit pull — see `07_object_package_map.md`)
 **abapGit layout:** `STARTING_FOLDER=/src/`, `FOLDER_LOGIC=PREFIX`, `MASTER_LANGUAGE=E`, flat
 
 ---
@@ -220,8 +220,8 @@ Message class `ZAB_V1_UT` — full seed list in `03_technical_specification.md` 
 10. Names: `ZCL_AB_V1_UT`, `ZCL_AB_V1_UT_GUI`, `ZIF_AB_V1_UT_*`, `ZCL_AB_V1_UT_<area>`,
     `ZCX_AB_V1_UT`, message class `ZAB_V1_UT`, `ZAB_V1_UT_DEMO`, `ZAB_V1_UT_DEMO_GUI`.
 11. BAL log object `ZAB_V1_UT` / subobject `GENERAL` — manual SLG0.
-12. **No new packages created by the framework** — assignment handled manually during
-    abapGit pull.
+12. **Package `ZABAP_UTIL`** — one flat package for every object (`src/package.devc.xml`
+    supplies its short text); link the repo to it on abapGit pull.
 
 ### Resolved defaults
 

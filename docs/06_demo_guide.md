@@ -7,14 +7,19 @@ demo reports. Applies after the implementation drop (v1.0.0).
 
 ## 1. Pull the repository (abapGit)
 
-1. `SE38` → `ZABAPGIT` (or the standalone report) → **Online**.
-2. URL: `https://github.com/VernasoftTechie/Utility-Class-and-Method.git`
-3. **Package:** assign your existing target package (e.g. `ZRAP_MIGR` or a dedicated Z
-   package). The repo intentionally ships **no** package definition.
-4. Folder logic **PREFIX**, starting folder `/src/`.
-5. Pull. `docs/*` is ignored by `.abapgit.xml` and not imported.
-6. Activate all objects. Expected activation order is handled by ADT/abapGit; if the
-   facade fails first pass, re-activate after the interfaces are green.
+1. `SE80` / `SE21` → create package **`ZABAP_UTIL`** (software component `HOME`, or your
+   Z transport layer). Short text: *Vernasoft ABAP Utility Framework (ZCL_AB_V1_UT)*.
+2. `SE38` → `ZABAPGIT` (or the standalone report) → **Online**.
+3. URL: `https://github.com/VernasoftTechie/Utility-Class-and-Method.git`
+4. **Package: `ZABAP_UTIL`**. Folder logic **PREFIX**, starting folder `/src/`.
+5. Pull. With flat `/src/` + PREFIX, **every object is created in `ZABAP_UTIL`**
+   (`src/package.devc.xml` supplies its short text). `docs/*`, `README.md`,
+   `.gitattributes` are ignored by `.abapgit.xml` and not imported.
+6. Activate all objects (`SE80` → package → activate all, or mass-activate in ADT).
+   Activation order is resolved automatically; if the facade fails on the first pass,
+   re-activate once the interfaces and impl classes are green.
+
+See `07_object_package_map.md` for the full object list.
 
 ---
 

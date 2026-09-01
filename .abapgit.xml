@@ -7,6 +7,7 @@
    <FOLDER_LOGIC>PREFIX</FOLDER_LOGIC>
    <IGNORE>
     <item>/.gitignore</item>
+    <item>/.gitattributes</item>
     <item>/LICENSE</item>
     <item>/README.md</item>
     <item>/docs/*</item>

@@ -22,7 +22,8 @@ Clean-Core-aligned, ATC-compliant, fully documented, repository-driven.
 | [`docs/04_test_scenarios.md`](docs/04_test_scenarios.md) | ABAP Unit scenario catalogue + coverage map |
 | [`docs/05_version_history.md`](docs/05_version_history.md) | Change log + release plan |
 | [`docs/06_demo_guide.md`](docs/06_demo_guide.md) | Manual setup (SLG0 / SNRO / SM30) + how to run the demo reports |
-| `src/` | ABAP objects (abapGit, `/src/` flat, FOLDER_LOGIC `PREFIX`) — added after approval |
+| [`docs/07_object_package_map.md`](docs/07_object_package_map.md) | Every object → package `ZABAP_UTIL` |
+| `src/` | ABAP objects (abapGit, `/src/` flat, FOLDER_LOGIC `PREFIX`, package `ZABAP_UTIL`) |
 
 ---
 
@@ -78,6 +79,10 @@ Reports / background jobs ┼─► ZCL_AB_V1_UT (static facade)        │
 
 ## Installation
 
-abapGit → Online → `https://github.com/VernasoftTechie/Utility-Class-and-Method.git` →
-assign your own package (the repo ships none) → Pull → activate.
-Then complete the one-off manual setup in [`docs/06_demo_guide.md`](docs/06_demo_guide.md) §2.
+1. Create package **`ZABAP_UTIL`**.
+2. abapGit → Online → `https://github.com/VernasoftTechie/Utility-Class-and-Method.git`
+   → **Package `ZABAP_UTIL`** → Pull → activate.
+   Flat `/src/` + `FOLDER_LOGIC PREFIX` ⇒ every object is created in `ZABAP_UTIL`
+   ([`docs/07_object_package_map.md`](docs/07_object_package_map.md)).
+3. One-off manual setup (SLG0 / SNRO / SM30) in
+   [`docs/06_demo_guide.md`](docs/06_demo_guide.md) §2.
