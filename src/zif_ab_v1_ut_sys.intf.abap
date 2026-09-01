@@ -29,9 +29,4 @@ INTERFACE zif_ab_v1_ut_sys
     EXPORTING ev_seconds TYPE decfloat34
               ev_cpu_ms  TYPE decfloat34.
 
-  METHODS text
-    IMPORTING iv_kind   TYPE string
-              iv_key    TYPE string
-    RETURNING VALUE(rv) TYPE string.
-
 ENDINTERFACE.

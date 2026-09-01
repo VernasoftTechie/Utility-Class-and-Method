@@ -51,13 +51,9 @@ INTERFACE zif_ab_v1_ut_msg
               io_previous TYPE REF TO cx_root OPTIONAL
     RAISING   zcx_ab_v1_ut.
 
-  METHODS to_reported
-    IMPORTING it_return TYPE bapiret2_t
-              is_key    TYPE any
-    CHANGING  reported  TYPE any.
-
-  METHODS to_failed
-    IMPORTING is_key   TYPE any
-    CHANGING  failed   TYPE any.
+  "! Split "MSGID-MSGNO" style text lookups etc. RAP FAILED/REPORTED builders
+  "! live in ZIF_AB_V1_UT_RAP (failed_add / reported_add / auth_to_failed).
+  METHODS symsg_to_bapiret
+    RETURNING VALUE(rs) TYPE bapiret2.
 
 ENDINTERFACE.

@@ -72,6 +72,7 @@ INTERFACE zif_ab_v1_ut_str
 
   METHODS alpha_in
     IMPORTING iv_value    TYPE clike
+              iv_length   TYPE i DEFAULT 10
     RETURNING VALUE(rv)   TYPE string.
 
   METHODS alpha_out

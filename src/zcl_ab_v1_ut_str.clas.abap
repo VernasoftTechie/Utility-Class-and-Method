@@ -188,13 +188,24 @@ CLASS zcl_ab_v1_ut_str IMPLEMENTATION.
 
 
   METHOD zif_ab_v1_ut_str~alpha_in.
-    rv = |{ iv_value ALPHA = IN }|.
+    DATA(lv_val) = condense( |{ iv_value }| ).
+    IF lv_val CO '0123456789' AND lv_val IS NOT INITIAL AND strlen( lv_val ) <= iv_length.
+      rv = |{ lv_val WIDTH = iv_length ALIGN = RIGHT PAD = '0' }|.
+    ELSE.
+      rv = lv_val.
+    ENDIF.
   ENDMETHOD.
 
 
   METHOD zif_ab_v1_ut_str~alpha_out.
-    rv = |{ iv_value ALPHA = OUT }|.
-    rv = condense( rv ).
+    DATA(lv_val) = condense( |{ iv_value }| ).
+    IF lv_val CO '0123456789' AND lv_val IS NOT INITIAL.
+      SHIFT lv_val LEFT DELETING LEADING '0'.
+      IF lv_val IS INITIAL.
+        lv_val = '0'.
+      ENDIF.
+    ENDIF.
+    rv = lv_val.
   ENDMETHOD.
 
 
