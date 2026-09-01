@@ -5,14 +5,14 @@ INTERFACE zif_ab_v1_ut_alv
   PUBLIC.
 
   METHODS show
-    IMPORTING iv_title   TYPE string OPTIONAL
+    IMPORTING iv_title   TYPE csequence OPTIONAL
               iv_variant TYPE slis_vari OPTIONAL
     CHANGING  ct_table   TYPE STANDARD TABLE
     RAISING   zcx_ab_v1_ut.
 
   METHODS show_dynamic
     IMPORTING ir_table  TYPE REF TO data
-              iv_title  TYPE string OPTIONAL
+              iv_title  TYPE csequence OPTIONAL
     RAISING   zcx_ab_v1_ut.
 
   METHODS build_fieldcat

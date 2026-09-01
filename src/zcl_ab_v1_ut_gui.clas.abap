@@ -17,8 +17,8 @@ CLASS zcl_ab_v1_ut_gui DEFINITION
       RAISING zcx_ab_v1_ut.
 
     CLASS-METHODS pick_file
-      IMPORTING iv_title      TYPE string OPTIONAL
-                iv_filter     TYPE string DEFAULT '(*.*)|*.*'
+      IMPORTING iv_title      TYPE csequence OPTIONAL
+                iv_filter     TYPE csequence DEFAULT '(*.*)|*.*'
       RETURNING VALUE(rv_path) TYPE string
       RAISING   zcx_ab_v1_ut.
 

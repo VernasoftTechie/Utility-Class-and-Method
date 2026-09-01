@@ -31,13 +31,14 @@ START-OF-SELECTION.
   TRY.
       CASE abap_true.
         WHEN p_alv.
-          zcl_ab_v1_ut_gui=>alv( )->show( EXPORTING iv_title = TEXT-t01
+          zcl_ab_v1_ut_gui=>alv( )->show( EXPORTING iv_title = `ZCL_AB_V1_UT_GUI - static ALV` ##NO_TEXT
                                           CHANGING  ct_table = lt ).
 
         WHEN p_dyn.
           DATA lr TYPE REF TO data.
           GET REFERENCE OF lt INTO lr.
-          zcl_ab_v1_ut_gui=>alv( )->show_dynamic( ir_table = lr iv_title = TEXT-t02 ).
+          zcl_ab_v1_ut_gui=>alv( )->show_dynamic( ir_table = lr
+                                                  iv_title = `ZCL_AB_V1_UT_GUI - dynamic ALV` ) ##NO_TEXT.
 
         WHEN p_fcat.
           DATA(lo_tt)   = CAST cl_abap_tabledescr( cl_abap_typedescr=>describe_by_data( lt ) ).
@@ -47,7 +48,7 @@ START-OF-SELECTION.
           ENDLOOP.
 
         WHEN p_file.
-          DATA(lv_path) = zcl_ab_v1_ut_gui=>pick_file( iv_title = TEXT-t03 ).
+          DATA(lv_path) = zcl_ab_v1_ut_gui=>pick_file( iv_title = `Pick any file` ) ##NO_TEXT.
           DATA(lv_x)    = zcl_ab_v1_ut_gui=>upload_file( lv_path ).
           DATA(lv_l1)   = |picked { lv_path } ({ xstrlen( lv_x ) } bytes)| ##NO_TEXT.
           WRITE / lv_l1.
