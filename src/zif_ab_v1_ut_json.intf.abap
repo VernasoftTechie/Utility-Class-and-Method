@@ -22,35 +22,14 @@ INTERFACE zif_ab_v1_ut_json
     RETURNING VALUE(rv) TYPE string
     RAISING   zcx_ab_v1_ut.
 
-  METHODS path_get
-    IMPORTING iv_json   TYPE string
-              iv_path   TYPE string
-    RETURNING VALUE(rv) TYPE string
-    RAISING   zcx_ab_v1_ut.
-
-  METHODS path_set
-    IMPORTING iv_json   TYPE string
-              iv_path   TYPE string
-              iv_value  TYPE string
-    RETURNING VALUE(rv) TYPE string
-    RAISING   zcx_ab_v1_ut.
-
+  "! RTTI of io_type / iv_data -> JSON metadata (component names, kinds, lengths).
   METHODS describe
     IMPORTING io_type         TYPE REF TO cl_abap_typedescr OPTIONAL
               iv_data         TYPE any OPTIONAL
     RETURNING VALUE(rv_schema) TYPE string
     RAISING   zcx_ab_v1_ut.
 
-  METHODS to_xml
-    IMPORTING iv_json   TYPE string
-    RETURNING VALUE(rv) TYPE string
-    RAISING   zcx_ab_v1_ut.
-
-  METHODS from_xml
-    IMPORTING iv_xml    TYPE string
-    RETURNING VALUE(rv) TYPE string
-    RAISING   zcx_ab_v1_ut.
-
+  "! ABAP data -> canonical asXML (CALL TRANSFORMATION id).
   METHODS xml_serialize
     IMPORTING iv_data   TYPE any
     RETURNING VALUE(rv) TYPE xstring
