@@ -51,14 +51,6 @@ INTERFACE zif_ab_v1_ut_tab
               iv_size       TYPE i
     RETURNING VALUE(rr_chunks) TYPE REF TO data.
 
-  METHODS pivot
-    IMPORTING it_data       TYPE ANY TABLE
-              iv_row_field  TYPE string
-              iv_col_field  TYPE string
-              iv_value_field TYPE string
-    EXPORTING et_result     TYPE STANDARD TABLE
-    RAISING   zcx_ab_v1_ut.
-
   METHODS fingerprint
     IMPORTING is_data   TYPE any
     RETURNING VALUE(rv) TYPE string.
