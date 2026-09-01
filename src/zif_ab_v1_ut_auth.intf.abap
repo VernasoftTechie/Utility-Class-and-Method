@@ -25,10 +25,4 @@ INTERFACE zif_ab_v1_ut_auth
     IMPORTING iv_user   TYPE syuname
     RETURNING VALUE(rv) TYPE abap_bool.
 
-  METHODS permitted_values
-    IMPORTING iv_object TYPE xuobject
-              iv_field  TYPE xufield
-              iv_user   TYPE syuname DEFAULT sy-uname
-    RETURNING VALUE(rt) TYPE zif_ab_v1_ut_types=>ty_string_tab.
-
 ENDINTERFACE.
