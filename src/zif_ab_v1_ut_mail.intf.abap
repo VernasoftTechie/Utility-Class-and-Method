@@ -34,15 +34,9 @@ INTERFACE zif_ab_v1_ut_mail
     RAISING   zcx_ab_v1_ut.
 
   METHODS build_html_body
-    IMPORTING iv_title      TYPE string
-              it_paragraphs TYPE zif_ab_v1_ut_types=>ty_string_tab OPTIONAL
-              it_table      TYPE ANY TABLE OPTIONAL
+    IMPORTING iv_title       TYPE string
+              it_paragraphs  TYPE zif_ab_v1_ut_types=>ty_string_tab OPTIONAL
+              it_table       TYPE ANY TABLE OPTIONAL
     RETURNING VALUE(rv_html) TYPE string.
-
-  "! DEFER
-  METHODS raise_workflow_event
-    IMPORTING iv_event     TYPE string
-              is_container TYPE any OPTIONAL
-    RAISING   zcx_ab_v1_ut.
 
 ENDINTERFACE.

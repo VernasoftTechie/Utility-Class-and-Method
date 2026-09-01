@@ -35,11 +35,6 @@ INTERFACE zif_ab_v1_ut_excel
     RETURNING VALUE(rv_xlsx) TYPE xstring
     RAISING   zcx_ab_v1_ut.
 
-  METHODS write_multi
-    IMPORTING it_sheets     TYPE zif_ab_v1_ut_types=>ty_nv_tab
-    RETURNING VALUE(rv_xlsx) TYPE xstring
-    RAISING   zcx_ab_v1_ut.
-
   METHODS generate_template
     IMPORTING iv_structure    TYPE string
               it_column_texts TYPE zif_ab_v1_ut_types=>ty_nv_tab OPTIONAL
