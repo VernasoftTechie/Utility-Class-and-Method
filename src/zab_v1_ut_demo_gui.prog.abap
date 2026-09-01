@@ -7,10 +7,12 @@
 *&---------------------------------------------------------------------*
 REPORT zab_v1_ut_demo_gui.
 
-PARAMETERS: p_alv   RADIOBUTTON GROUP g1 DEFAULT 'X',
-            p_dyn   RADIOBUTTON GROUP g1,
-            p_fcat  RADIOBUTTON GROUP g1,
-            p_file  RADIOBUTTON GROUP g1.
+SELECTION-SCREEN BEGIN OF BLOCK b1 WITH FRAME TITLE TEXT-b01.
+PARAMETERS: p_alv  RADIOBUTTON GROUP g1 DEFAULT 'X',
+            p_dyn  RADIOBUTTON GROUP g1,
+            p_fcat RADIOBUTTON GROUP g1,
+            p_file RADIOBUTTON GROUP g1.
+SELECTION-SCREEN END OF BLOCK b1.
 
 TYPES: BEGIN OF ty_row,
          carrid   TYPE c LENGTH 3,
@@ -29,28 +31,30 @@ START-OF-SELECTION.
   TRY.
       CASE abap_true.
         WHEN p_alv.
-          zcl_ab_v1_ut_gui=>alv( )->show( EXPORTING iv_title = 'ZCL_AB_V1_UT_GUI - static ALV'
+          zcl_ab_v1_ut_gui=>alv( )->show( EXPORTING iv_title = TEXT-t01
                                           CHANGING  ct_table = lt ).
 
         WHEN p_dyn.
           DATA lr TYPE REF TO data.
           GET REFERENCE OF lt INTO lr.
-          zcl_ab_v1_ut_gui=>alv( )->show_dynamic( ir_table = lr iv_title = 'dynamic ALV' ).
+          zcl_ab_v1_ut_gui=>alv( )->show_dynamic( ir_table = lr iv_title = TEXT-t02 ).
 
         WHEN p_fcat.
-          DATA(lo_tt) = CAST cl_abap_tabledescr( cl_abap_typedescr=>describe_by_data( lt ) ).
+          DATA(lo_tt)   = CAST cl_abap_tabledescr( cl_abap_typedescr=>describe_by_data( lt ) ).
           DATA(lt_fcat) = zcl_ab_v1_ut_gui=>alv( )->build_fieldcat( lo_tt ).
           LOOP AT lt_fcat INTO DATA(ls_f).
             WRITE: / ls_f-fieldname, ls_f-inttype, ls_f-outputlen.
           ENDLOOP.
 
         WHEN p_file.
-          DATA(lv_path) = zcl_ab_v1_ut_gui=>pick_file( iv_title = 'pick any file' ).
+          DATA(lv_path) = zcl_ab_v1_ut_gui=>pick_file( iv_title = TEXT-t03 ).
           DATA(lv_x)    = zcl_ab_v1_ut_gui=>upload_file( lv_path ).
-          WRITE: / |picked { lv_path } ({ xstrlen( lv_x ) } bytes)|.
+          DATA(lv_l1)   = |picked { lv_path } ({ xstrlen( lv_x ) } bytes)| ##NO_TEXT.
+          WRITE / lv_l1.
           zcl_ab_v1_ut_gui=>download_file( iv_path    = |{ lv_path }.copy|
                                            iv_content = lv_x ).
-          WRITE: / |written back to { lv_path }.copy|.
+          DATA(lv_l2)   = |written back to { lv_path }.copy|        ##NO_TEXT.
+          WRITE / lv_l2.
       ENDCASE.
 
     CATCH zcx_ab_v1_ut INTO DATA(lx).

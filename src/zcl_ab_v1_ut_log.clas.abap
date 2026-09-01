@@ -37,19 +37,24 @@ CLASS zcl_ab_v1_ut_log IMPLEMENTATION.
   METHOD zif_ab_v1_ut_log~create.
     DATA(lo) = NEW zcl_ab_v1_ut_log( ).
 
-    DATA(ls_log) = VALUE bal_s_log( object    = iv_object
-                                    subobject = iv_subobject
-                                    extnumber = iv_extnumber
-                                    aluser    = sy-uname
-                                    alprog    = sy-cprog ).
-    CALL FUNCTION 'BAL_LOG_CREATE'
-      EXPORTING  i_s_log                 = ls_log
-      IMPORTING  e_log_handle            = lo->mv_handle
-      EXCEPTIONS OTHERS                  = 0.
-    IF sy-subrc <> 0.
-      " a missing SLG0 object must not break the caller - keep a memory-only log
-      CLEAR lo->mv_handle.
+    " Only touch BAL when the SLG0 object really exists - otherwise keep a
+    " memory-only log (messages still collected in mt_msgs).
+    SELECT SINGLE object FROM balobj INTO @DATA(lv_obj) WHERE object = @iv_object.
+    IF sy-subrc = 0.
+      DATA(ls_log) = VALUE bal_s_log( object    = iv_object
+                                      subobject = iv_subobject
+                                      extnumber = iv_extnumber
+                                      aluser    = sy-uname
+                                      alprog    = sy-cprog ).
+      CALL FUNCTION 'BAL_LOG_CREATE'
+        EXPORTING  i_s_log      = ls_log
+        IMPORTING  e_log_handle = lo->mv_handle
+        EXCEPTIONS OTHERS       = 0.
+      IF sy-subrc <> 0.
+        CLEAR lo->mv_handle.
+      ENDIF.
     ENDIF.
+
     ro_log = lo.
   ENDMETHOD.
 
