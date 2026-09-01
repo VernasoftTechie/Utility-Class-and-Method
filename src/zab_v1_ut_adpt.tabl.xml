@@ -9,7 +9,6 @@
     <CLIDEP>X</CLIDEP>
     <DDTEXT>ZCL_AB_V1_UT: active adapter per functional area</DDTEXT>
     <CONTFLAG>C</CONTFLAG>
-    <EXCLASS>1</EXCLASS>
    </DD02V>
    <DD09L>
     <TABNAME>ZAB_V1_UT_ADPT</TABNAME>
