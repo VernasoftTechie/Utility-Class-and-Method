@@ -43,7 +43,8 @@ CLASS zcl_ab_v1_ut_conv IMPLEMENTATION.
     lv_y = lv_tot DIV 12.
     lv_m = ( lv_tot MOD 12 ) + 1.
 
-    DATA(lv_last) = CONV i( last_day_of_month( iv_year = lv_y iv_month = lv_m )+6(2) ).
+    DATA(lv_ld)   = last_day_of_month( iv_year = lv_y iv_month = lv_m ).
+    DATA(lv_last) = CONV i( lv_ld+6(2) ).
     IF lv_d > lv_last.
       lv_d = lv_last.
     ENDIF.

@@ -8,16 +8,16 @@ CLASS ltc_str DEFINITION FINAL FOR TESTING
     DATA mo TYPE REF TO zif_ab_v1_ut_str.
 
     METHODS setup.
-    METHODS to_amount_eu       FOR TESTING.
-    METHODS to_amount_us       FOR TESTING.
+    METHODS to_amount_eu       FOR TESTING RAISING zcx_ab_v1_ut.
+    METHODS to_amount_us       FOR TESTING RAISING zcx_ab_v1_ut.
     METHODS to_amount_bad      FOR TESTING.
     METHODS amount_roundtrip   FOR TESTING.
-    METHODS to_date_formats    FOR TESTING.
+    METHODS to_date_formats    FOR TESTING RAISING zcx_ab_v1_ut.
     METHODS to_date_bad        FOR TESTING.
     METHODS alpha              FOR TESTING.
     METHODS snake_camel        FOR TESTING.
-    METHODS base64_roundtrip   FOR TESTING.
-    METHODS hash_sha256        FOR TESTING.
+    METHODS base64_roundtrip   FOR TESTING RAISING zcx_ab_v1_ut.
+    METHODS hash_sha256        FOR TESTING RAISING zcx_ab_v1_ut.
     METHODS regex_grp          FOR TESTING.
     METHODS validators         FOR TESTING.
     METHODS mask_pan           FOR TESTING.
@@ -51,7 +51,7 @@ CLASS ltc_str IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD amount_roundtrip.
-    DATA(lv_txt) = mo->from_amount( iv_amount = CONV decfloat34( '1234.50' )
+    DATA(lv_txt) = mo->from_amount( iv_amount   = CONV decfloat34( '1234.50' )
                                     iv_currency = 'EUR'
                                     iv_notation = zif_ab_v1_ut_str=>c_notation-eu ).
     cl_abap_unit_assert=>assert_equals( exp = '1.234,50' act = lv_txt ).
@@ -83,14 +83,13 @@ CLASS ltc_str IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD base64_roundtrip.
-    DATA(lv_x) = CONV xstring( '48656C6C6F' ).
+    DATA(lv_x) = mo->to_xstring( 'Hello' ).
     cl_abap_unit_assert=>assert_equals(
       exp = lv_x
       act = mo->base64_decode( mo->base64_encode( lv_x ) ) ).
   ENDMETHOD.
 
   METHOD hash_sha256.
-    " SHA-256("abc")
     cl_abap_unit_assert=>assert_equals(
       exp = 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad'
       act = mo->hash( iv_data = 'abc' iv_algo = zif_ab_v1_ut_str=>c_algo-sha256 ) ).

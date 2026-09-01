@@ -122,15 +122,17 @@ INTERFACE zif_ab_v1_ut_str
     RETURNING VALUE(rv) TYPE xstring
     RAISING   zcx_ab_v1_ut.
 
+  "! @parameter iv_codepage | e.g. 'UTF-8' (default), 'UTF-16LE', 'ISO-8859-1'
   METHODS to_xstring
     IMPORTING iv_string   TYPE string
-              iv_codepage TYPE cpcodepage OPTIONAL
+              iv_codepage TYPE string OPTIONAL
     RETURNING VALUE(rv)   TYPE xstring
     RAISING   zcx_ab_v1_ut.
 
+  "! @parameter iv_codepage | e.g. 'UTF-8' (default), 'UTF-16LE', 'ISO-8859-1'
   METHODS from_xstring
     IMPORTING iv_xstring  TYPE xstring
-              iv_codepage TYPE cpcodepage OPTIONAL
+              iv_codepage TYPE string OPTIONAL
     RETURNING VALUE(rv)   TYPE string
     RAISING   zcx_ab_v1_ut.
 

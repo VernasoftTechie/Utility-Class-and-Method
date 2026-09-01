@@ -276,11 +276,14 @@ CLASS zcl_ab_v1_ut_str IMPLEMENTATION.
 
 
   METHOD zif_ab_v1_ut_str~to_xstring.
+    DATA lo TYPE REF TO if_abap_conv_out.
     TRY.
-        DATA(lo) = COND #( WHEN iv_codepage IS INITIAL
-                           THEN cl_abap_conv_codepage=>create_out( )
-                           ELSE cl_abap_conv_codepage=>create_out( codepage = iv_codepage ) ).
-        rv = lo->convert( iv_string ).
+        IF iv_codepage IS INITIAL.
+          lo = cl_abap_conv_codepage=>create_out( ).
+        ELSE.
+          lo = cl_abap_conv_codepage=>create_out( codepage = CONV #( iv_codepage ) ).
+        ENDIF.
+        rv = lo->convert( source = iv_string ).
       CATCH cx_root INTO DATA(lx).
         zcx_ab_v1_ut=>raise_t100( iv_msgno = '020' iv_msgv1 = 'string' iv_msgv2 = 'xstring' io_previous = lx ).
     ENDTRY.
@@ -288,11 +291,14 @@ CLASS zcl_ab_v1_ut_str IMPLEMENTATION.
 
 
   METHOD zif_ab_v1_ut_str~from_xstring.
+    DATA lo TYPE REF TO if_abap_conv_in.
     TRY.
-        DATA(lo) = COND #( WHEN iv_codepage IS INITIAL
-                           THEN cl_abap_conv_codepage=>create_in( )
-                           ELSE cl_abap_conv_codepage=>create_in( codepage = iv_codepage ) ).
-        rv = lo->convert( iv_xstring ).
+        IF iv_codepage IS INITIAL.
+          lo = cl_abap_conv_codepage=>create_in( ).
+        ELSE.
+          lo = cl_abap_conv_codepage=>create_in( codepage = CONV #( iv_codepage ) ).
+        ENDIF.
+        rv = lo->convert( source = iv_xstring ).
       CATCH cx_root INTO DATA(lx).
         zcx_ab_v1_ut=>raise_t100( iv_msgno = '020' iv_msgv1 = 'xstring' iv_msgv2 = 'string' io_previous = lx ).
     ENDTRY.
