@@ -4,8 +4,9 @@
 SAP S/4HANA 2023 (on-premise), consumed by RAP applications, executable reports,
 background jobs and migration tooling.
 
-> **Status:** design phase. Documentation is complete and awaiting architecture approval
-> (Rulebook §8, step 2). **No ABAP objects are committed yet** — they follow on approval.
+> **Status: v1.0.0 — code complete.** All 18 areas implemented and activated on
+> S/4HANA 2023. Pending: ATC run + C1 release. See
+> [`docs/05_version_history.md`](docs/05_version_history.md) for scope delivered vs. spec.
 
 Built to the *Vernasoft ABAP & RAP Engineering Rulebook*: Clean ABAP, RAP-compliant,
 Clean-Core-aligned, ATC-compliant, fully documented, repository-driven.
@@ -72,8 +73,22 @@ Reports / background jobs ┼─► ZCL_AB_V1_UT (static facade)        │
 | Interfaces | `ZIF_AB_V1_UT_<AREA>`, `ZIF_AB_V1_UT_TYPES` |
 | Exception | `ZCX_AB_V1_UT` |
 | Message class | `ZAB_V1_UT` |
-| DDIC | `ZAB_V1_UT_ADPT` (table), `ZAB_V1_UT_AREA` (domain), `ZAB_V1_UT_ADAPT` (data element) |
+| DDIC | `ZAB_V1_UT_ADPT` (table), `ZAB_V1_UT_AREA` (domain + data element) |
 | Reports | `ZAB_V1_UT_DEMO`, `ZAB_V1_UT_DEMO_GUI` |
+
+---
+
+## Object inventory (committed)
+
+**Interfaces (19):** `ZIF_AB_V1_UT_TYPES` + `_STR _CONV _TAB _DB _FILE _EXCEL _JSON _LOG
+_MSG _AUTH _NUM _MAIL _ATTACH _ALV _SYS _CFG _RAP _JOB`
+
+**Classes (22):** `ZCL_AB_V1_UT` (facade) · `ZCL_AB_V1_UT_STR _CONV _TAB _DB _FILE _EXCEL
+_JSON _LOG _MSG _AUTH _NUM _MAIL _ATTACH_STUB _ATTACH_GOS _SYS _CFG _RAP _JOB` (18 impls) ·
+`ZCL_AB_V1_UT_PHASE` · `ZCL_AB_V1_UT_GUI` · `ZCX_AB_V1_UT`
+
+**Other:** message class `ZAB_V1_UT` · domain + data element `ZAB_V1_UT_AREA` · table
+`ZAB_V1_UT_ADPT` · reports `ZAB_V1_UT_DEMO` / `ZAB_V1_UT_DEMO_GUI` · 13 ABAP Unit classes
 
 ---
 

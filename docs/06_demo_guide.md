@@ -65,30 +65,38 @@ application-server directory, and grant `S_DATASET` for that path to the demo us
 
 ## 3. Running `ZAB_V1_UT_DEMO` (headless / Core + Defer)
 
-`SE38` → `ZAB_V1_UT_DEMO`. Selection screen: one radio button per functional area (STR,
-CONV, TAB, DB, FILE, JSON, LOG, MSG, AUTH, NUM, MAIL, ATTACH, SYS, CFG, RAP, JOB) plus a
-"Run all" option.
+`SE38` → `ZAB_V1_UT_DEMO`. Selection screen:
+
+| Field | Meaning |
+|---|---|
+| `P_AREA` | listbox of the functional areas (from domain `ZAB_V1_UT_AREA`); default `STR` |
+| `P_ALL` | run every area instead of just `P_AREA` |
+| `P_CMT` | allow side effects that need a COMMIT (`LOG~save`) |
+| `P_SEND` | actually send the demo mail |
+| `P_RCPT` | recipient address for `P_SEND` |
 
 | Area | What the demo does |
 |---|---|
-| STR | parses `'1.234,56'`, hashes a string, validates an email, prints amount-in-words |
-| CONV | adds 30 working days, shows quarter bounds, converts KG→G |
-| TAB | builds a dynamic table, runs `diff` on two fixtures, prints insert/update/delete counts |
-| DB | `exists` + `describe` on `ZAB_V1_UT_ADPT` (read/dynamic SELECT shown read-only) |
-| FILE | zip/unzip a fixture, CSV round-trip; app-server write+read if a logical name is set |
-| JSON | serialize a structure (pretty + camelCase), deserialize back, print schema |
-| LOG | in-memory log with 3 messages, `to_string`; `save` only if "commit" checkbox ticked |
-| MSG | builds text from `ZAB_V1_UT/013`, shows severity helpers on a mixed BAPIRET2 table |
-| AUTH | `check` on `S_TCODE`/`SE38`, `is_user_valid` for `sy-uname` |
-| NUM | draws 3 numbers from `ZAB_V1_UT` interval `01` (needs 2.2) |
-| MAIL | builds an HTML body and prints it; only sends if "send" checkbox ticked + recipient given |
-| ATTACH | new GUID, `attach`→`list`→`get` against the configured adapter |
-| SYS | prints system info, checks object existence, times a loop |
-| CFG | reads a TVARVC value, lists `ZAB_V1_UT_AREA` enum |
-| RAP | `new_cid`, builds a `REPORTED` row, converts to BAPIRET2 |
-| JOB | `run_parallel` over 3 in-process packages |
+| STR | `to_amount('1.234,56')`, `from_amount`, SHA-256, email validator, amount-in-words |
+| CONV | `add_months`, quarter bounds, commercial rounding |
+| TAB | `diff` on two fixtures → insert/update/delete counts |
+| DB | `exists` on `ZAB_V1_UT_ADPT` (area `ATTACH`) |
+| FILE | `mime_type`, `csv_build` header line |
+| JSON | `serialize` (pretty + camelCase) of a structure |
+| LOG | in-memory log, `to_string`; `save` only if `P_CMT` |
+| MSG | `t100_to_text` for `ZAB_V1_UT/013`, `bapiret_max_severity` on S/W/E |
+| AUTH | `check` on `S_TCODE`/`SE38`, `is_user_valid( sy-uname )` |
+| NUM | 3 × `next` from `ZAB_V1_UT` interval `01` (needs §2.2) |
+| MAIL | `build_html_body` length; sends only if `P_SEND` + `P_RCPT` |
+| ATTACH | `new_guid_c32`, `attach`→`list` against the configured adapter |
+| SYS | `system_info`, `object_exists('CLAS','ZCL_AB_V1_UT')` |
+| CFG | `enum_values('ZAB_V1_UT_AREA')` count |
+| RAP | `new_cid` |
+| JOB | `is_finished` for an unknown job |
 
 No SAP GUI control classes are used — safe to run in batch (`SUBMIT … VIA JOB`).
+Each area runs inside its own `TRY/CATCH zcx_ab_v1_ut`, so a missing prerequisite
+(e.g. SNRO object for NUM) prints `ERROR: …` and the run continues.
 
 ---
 

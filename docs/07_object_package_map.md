@@ -67,32 +67,33 @@ below (current and future) are created in `ZABAP_UTIL`.** No per-object mapping 
 | Object | Status | abapGit file | Package |
 |---|---|---|---|
 | `ZCL_AB_V1_UT_STR` | committed | `src/zcl_ab_v1_ut_str.clas.*` | `ZABAP_UTIL` |
-| `ZCL_AB_V1_UT_CONV` | planned | `src/zcl_ab_v1_ut_conv.clas.*` | `ZABAP_UTIL` |
-| `ZCL_AB_V1_UT_TAB` | planned | `src/zcl_ab_v1_ut_tab.clas.*` | `ZABAP_UTIL` |
-| `ZCL_AB_V1_UT_DB` | planned | `src/zcl_ab_v1_ut_db.clas.*` | `ZABAP_UTIL` |
-| `ZCL_AB_V1_UT_FILE` | planned | `src/zcl_ab_v1_ut_file.clas.*` | `ZABAP_UTIL` |
-| `ZCL_AB_V1_UT_EXCEL` | planned | `src/zcl_ab_v1_ut_excel.clas.*` | `ZABAP_UTIL` |
-| `ZCL_AB_V1_UT_JSON` | planned | `src/zcl_ab_v1_ut_json.clas.*` | `ZABAP_UTIL` |
-| `ZCL_AB_V1_UT_LOG` | planned | `src/zcl_ab_v1_ut_log.clas.*` | `ZABAP_UTIL` |
-| `ZCL_AB_V1_UT_MSG` | planned | `src/zcl_ab_v1_ut_msg.clas.*` | `ZABAP_UTIL` |
-| `ZCL_AB_V1_UT_AUTH` | planned | `src/zcl_ab_v1_ut_auth.clas.*` | `ZABAP_UTIL` |
-| `ZCL_AB_V1_UT_NUM` | planned | `src/zcl_ab_v1_ut_num.clas.*` | `ZABAP_UTIL` |
-| `ZCL_AB_V1_UT_MAIL` | planned | `src/zcl_ab_v1_ut_mail.clas.*` | `ZABAP_UTIL` |
-| `ZCL_AB_V1_UT_ATTACH_GOS` | planned | `src/zcl_ab_v1_ut_attach_gos.clas.*` | `ZABAP_UTIL` |
-| `ZCL_AB_V1_UT_ATTACH_STUB` | planned | `src/zcl_ab_v1_ut_attach_stub.clas.*` | `ZABAP_UTIL` |
-| `ZCL_AB_V1_UT_SYS` | planned | `src/zcl_ab_v1_ut_sys.clas.*` | `ZABAP_UTIL` |
-| `ZCL_AB_V1_UT_CFG` | planned | `src/zcl_ab_v1_ut_cfg.clas.*` | `ZABAP_UTIL` |
-| `ZCL_AB_V1_UT_RAP` | planned | `src/zcl_ab_v1_ut_rap.clas.*` | `ZABAP_UTIL` |
-| `ZCL_AB_V1_UT_JOB` | planned | `src/zcl_ab_v1_ut_job.clas.*` | `ZABAP_UTIL` |
-| `ZCL_AB_V1_UT` (facade) | planned | `src/zcl_ab_v1_ut.clas.*` | `ZABAP_UTIL` |
-| `ZCL_AB_V1_UT_GUI` | planned | `src/zcl_ab_v1_ut_gui.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_CONV` | committed | `src/zcl_ab_v1_ut_conv.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_TAB` | committed | `src/zcl_ab_v1_ut_tab.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_DB` | committed | `src/zcl_ab_v1_ut_db.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_FILE` | committed | `src/zcl_ab_v1_ut_file.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_EXCEL` | committed | `src/zcl_ab_v1_ut_excel.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_JSON` | committed | `src/zcl_ab_v1_ut_json.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_LOG` | committed | `src/zcl_ab_v1_ut_log.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_MSG` | committed | `src/zcl_ab_v1_ut_msg.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_AUTH` | committed | `src/zcl_ab_v1_ut_auth.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_NUM` | committed | `src/zcl_ab_v1_ut_num.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_MAIL` | committed | `src/zcl_ab_v1_ut_mail.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_ATTACH_GOS` | committed | `src/zcl_ab_v1_ut_attach_gos.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_ATTACH_STUB` | committed | `src/zcl_ab_v1_ut_attach_stub.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_SYS` | committed | `src/zcl_ab_v1_ut_sys.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_CFG` | committed | `src/zcl_ab_v1_ut_cfg.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_RAP` | committed | `src/zcl_ab_v1_ut_rap.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_JOB` | committed | `src/zcl_ab_v1_ut_job.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_PHASE` | committed | `src/zcl_ab_v1_ut_phase.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT` (facade) | committed | `src/zcl_ab_v1_ut.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_GUI` | committed | `src/zcl_ab_v1_ut_gui.clas.*` | `ZABAP_UTIL` |
 
 ## Reports (2)
 
 | Object | Status | abapGit file | Package |
 |---|---|---|---|
-| `ZAB_V1_UT_DEMO` | planned | `src/zab_v1_ut_demo.prog.*` | `ZABAP_UTIL` |
-| `ZAB_V1_UT_DEMO_GUI` | planned | `src/zab_v1_ut_demo_gui.prog.*` | `ZABAP_UTIL` |
+| `ZAB_V1_UT_DEMO` | committed | `src/zab_v1_ut_demo.prog.*` | `ZABAP_UTIL` |
+| `ZAB_V1_UT_DEMO_GUI` | committed | `src/zab_v1_ut_demo_gui.prog.*` | `ZABAP_UTIL` |
 
 ## Not imported (repo docs / config)
 
