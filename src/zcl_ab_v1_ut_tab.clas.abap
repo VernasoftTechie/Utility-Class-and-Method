@@ -143,14 +143,20 @@ CLASS zcl_ab_v1_ut_tab IMPLEMENTATION.
     IF it_fields IS INITIAL.
       SORT ct_data.
       DELETE ADJACENT DUPLICATES FROM ct_data COMPARING ALL FIELDS.
-    ELSE.
-      DATA lt_sort TYPE abap_sortorder_tab.
-      LOOP AT it_fields INTO DATA(lv_f).
-        APPEND VALUE #( name = to_upper( lv_f ) ) TO lt_sort.
-      ENDLOOP.
-      SORT ct_data BY (lt_sort).
-      DELETE ADJACENT DUPLICATES FROM ct_data COMPARING (it_fields).
+      RETURN.
     ENDIF.
+
+    DATA lt_sort TYPE abap_sortorder_tab.
+    DATA lv_comp TYPE string.
+    LOOP AT it_fields INTO DATA(lv_f).
+      DATA(lv_name) = to_upper( condense( lv_f ) ).
+      APPEND VALUE #( name = lv_name ) TO lt_sort.
+      lv_comp = COND #( WHEN lv_comp IS INITIAL THEN lv_name ELSE |{ lv_comp },{ lv_name }| ).
+    ENDLOOP.
+
+    SORT ct_data BY (lt_sort).
+    " dynamic COMPARING wants a char-like list, not an internal table
+    DELETE ADJACENT DUPLICATES FROM ct_data COMPARING (lv_comp).
   ENDMETHOD.
 
 

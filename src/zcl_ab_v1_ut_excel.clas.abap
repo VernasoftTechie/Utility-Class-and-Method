@@ -28,10 +28,11 @@ ENDCLASS.
 CLASS zcl_ab_v1_ut_excel IMPLEMENTATION.
 
   METHOD col_letter.
+    CONSTANTS c_abc TYPE c LENGTH 26 VALUE 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.
     DATA(lv_n) = iv_col.
     WHILE lv_n > 0.
       DATA(lv_rem) = ( lv_n - 1 ) MOD 26.
-      rv   = |{ sy-abcde+lv_rem(1) }{ rv }|.
+      rv   = |{ c_abc+lv_rem(1) }{ rv }|.
       lv_n = ( lv_n - 1 ) DIV 26.
     ENDWHILE.
   ENDMETHOD.

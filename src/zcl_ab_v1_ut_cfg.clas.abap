@@ -86,27 +86,22 @@ CLASS zcl_ab_v1_ut_cfg IMPLEMENTATION.
 
 
   METHOD zif_ab_v1_ut_cfg~enum_values.
-    SELECT domvalue_l AS name, ddtext AS value
-      FROM dd07v
-      WHERE domname    = @iv_domain
-        AND ddlanguage = @sy-langu
-      ORDER BY valpos
-      INTO TABLE @DATA(lt).
+    DATA lt_dd07v TYPE STANDARD TABLE OF dd07v.
 
-    IF lt IS INITIAL.
-      SELECT domvalue_l AS name, ddtext AS value
-        FROM dd07v
-        WHERE domname    = @iv_domain
-          AND ddlanguage = 'E'
-        ORDER BY valpos
-        INTO TABLE @lt.
+    CALL FUNCTION 'DD_DOMVALUES_GET'
+      EXPORTING  domname   = iv_domain
+                 text      = 'X'
+                 langu     = sy-langu
+      TABLES     dd07v_tab = lt_dd07v
+      EXCEPTIONS wrong_textflag = 1
+                 OTHERS         = 2.
+
+    IF sy-subrc <> 0 OR lt_dd07v IS INITIAL.
+      zcx_ab_v1_ut=>raise_t100( iv_msgno = '019' iv_msgv1 = 'domain' iv_msgv2 = iv_domain ) ##NO_TEXT.
     ENDIF.
 
-    IF lt IS INITIAL.
-      zcx_ab_v1_ut=>raise_t100( iv_msgno = '019' iv_msgv1 = 'domain' iv_msgv2 = |{ iv_domain }| ).
-    ENDIF.
-
-    rt = VALUE #( FOR ls IN lt ( name = ls-name value = ls-value ) ).
+    SORT lt_dd07v BY valpos.
+    rt = VALUE #( FOR ls IN lt_dd07v ( name = ls-domvalue_l value = ls-ddtext ) ).
   ENDMETHOD.
 
 ENDCLASS.

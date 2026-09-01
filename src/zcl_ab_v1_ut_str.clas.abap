@@ -236,7 +236,10 @@ CLASS zcl_ab_v1_ut_str IMPLEMENTATION.
   METHOD zif_ab_v1_ut_str~split.
     SPLIT iv_value AT iv_sep INTO TABLE DATA(lt).
     LOOP AT lt INTO DATA(lv).
-      APPEND COND #( WHEN iv_trim = abap_true THEN condense( lv ) ELSE lv ) TO rt.
+      IF iv_trim = abap_true.
+        lv = condense( lv ).
+      ENDIF.
+      APPEND lv TO rt.
     ENDLOOP.
   ENDMETHOD.
 
