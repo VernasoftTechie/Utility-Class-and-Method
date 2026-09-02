@@ -51,6 +51,9 @@ application-server file I/O) isolated behind their own interfaces.
      *only* when the caller passes `iv_commit_each = abap_true` (default; the standard
      mass-processing pattern — bounded LUW per package, DB locks released, restartable).
      RAP / LUW-owning callers pass `iv_commit_each = abap_false`.
+   - `ZIF_AB_V1_UT_BAPI~mass` / `~commit` / `~rollback` call `BAPI_TRANSACTION_COMMIT` /
+     `_ROLLBACK`. `mass` only commits when `iv_test_run = abap_false`, on the
+     `iv_commit_every` interval. `commit` / `rollback` are explicit caller requests.
    `ZIF_AB_V1_UT_LOG~save` avoids the statement entirely by using `BAL_DB_SAVE` on a
    secondary DB connection.
 2. No `MESSAGE` to screen, no `CALL SCREEN/TRANSACTION/DIALOG` in the core.
