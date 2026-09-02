@@ -284,6 +284,19 @@ Test isolation techniques:
 
 ---
 
+## TS-18..22 · v1.1.0 implementation toolkit (local test classes, `DURATION SHORT`)
+
+| ID | Class | Scenarios |
+|---|---|---|
+| TS-18 | `ZCL_AB_V1_UT_HTTP` | `for_url`/`with_header`/`with_retry` return self; `odata_filter` → `bukrs eq '1000' and gjahr eq '2026'`; `odata_query` emits `$filter`/`$top`/`$select`; `soap_envelope` wraps `<soapenv:Envelope>` / `<soapenv:Body>` |
+| TS-19 | `ZCL_AB_V1_UT_BULK` | `run_packaged` over 10 keys / pkg 3 → COMPLETE, every key once; handler error → `errors` counter; `resume` from a seeded checkpoint starts at key 7; `ZCL_AB_V1_UT_BULK_STORE_MEM` save/load/delete round-trip; non-table `ir_keys` → `ZCX_AB_V1_UT` |
+| TS-20 | `ZCL_AB_V1_UT_BAPI` | `bdc_dynpro`+`bdc_field` build 3 BDCDATA rows; unknown FM / unknown tcode → `ZCX_AB_V1_UT`; `call_by_name( RFC_SYSTEM_INFO )` fills `es_export` |
+| TS-21 | `ZCL_AB_V1_UT_CUTOVER` | `task_run` all-ok → 3× DONE; stop-on-error → DONE/ERROR/SKIPPED + message; `readiness_check` returns ≥ 1 finding, never dumps |
+| TS-22 | `ZCL_AB_V1_UT_TRANSPORT` | `custom_code_inventory($TMP)` no dump; unknown package / request → `ZCX_AB_V1_UT`; empty `locking_requests`; `where_used` read path |
+| TS-00b | `ZCL_AB_V1_UT` facade | `bulk`/`bapi`/`cutover`/`transport` are singletons; `http` is fresh per call; `set_http` seam pins it |
+
+---
+
 ## 18. Integration Scenarios (manual / CI, `DURATION MEDIUM`)
 
 | ID | Scenario |
@@ -294,6 +307,9 @@ Test isolation techniques:
 | INT-04 | Real GOS: attach a PDF to a test BO, retrieve via `get`, verify byte-equal |
 | INT-05 | Real mail: send to a test mailbox, verify in `SOST` |
 | INT-06 | Consume `ZCL_AB_V1_UT` from a RAP BO behaviour pool – ATC clean, no GUI dependency pulled |
+| INT-07 | `ZAB_V1_UT_DEMO_INT` run for every toolkit area on a sandbox – no dumps; `p_side` + `p_par` paths exercised |
+| INT-08 | Real HTTP: `ZCL_AB_V1_UT_HTTP` GET against an SM59 HTTP destination / public test API – 200 + body |
+| INT-09 | Real parallel: `BULK~run_parallel` over a DDIC-typed key table – all packages processed across ≥ 2 work processes |
 
 ---
 

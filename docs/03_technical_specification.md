@@ -10,6 +10,11 @@ Conventions: importing params `iv_`/`is_`/`it_`/`io_`; returning `rv_`/`rs_`/`rt
 exporting `ev_`/`es_`/`et_`; changing `cv_`/`cs_`/`ct_`. All fallible methods
 `RAISING zcx_ab_v1_ut`. Boolean = `abap_bool`.
 
+> **v1.1.0 implementation toolkit** interfaces (`ZIF_AB_V1_UT_HTTP` / `_BULK` (+ `_HANDLER`
+> / `_STORE`) / `_BAPI` / `_CUTOVER` (+ `_EXEC`) / `_TRANSPORT`) and their message numbers
+> 021–035 are specified in [`08_implementation_toolkit.md`](08_implementation_toolkit.md).
+> Facade accessors: `http()` `bulk()` `bapi()` `cutover()` `transport()` (+ `set_*` seams).
+
 ---
 
 ## 1. Shared Types – `ZIF_AB_V1_UT_TYPES`

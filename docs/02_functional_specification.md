@@ -8,6 +8,11 @@ This document describes **what each area does**, its **inputs/outputs**, **RAP-m
 RAP-mode legend: **Core** (safe anywhere) · **Defer** (RAP late/save phase only) ·
 **GUI** (SAP GUI only) · **Gated** (on-prem only, ATC-exempted, not for RAP BO logic).
 
+> **v1.1.0 implementation toolkit** (`HTTP` / `BULK` / `BAPI` / `CUTOVER` / `TRANSPORT`) —
+> functional description **and** binding signatures live in
+> [`08_implementation_toolkit.md`](08_implementation_toolkit.md). Scope actually
+> delivered vs. spec: [`05_version_history.md`](05_version_history.md).
+
 ---
 
 ## FS-01 · `ZIF_AB_V1_UT_STR` – String / Type / Conversion  *(Core)*
