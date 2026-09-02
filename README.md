@@ -17,6 +17,7 @@ Clean-Core-aligned, ATC-compliant, fully documented, repository-driven.
 
 | Path | Contents |
 |---|---|
+| [`docs/00_engineering_log.md`](docs/00_engineering_log.md) | **Read before touching any ABAP** — every mistake made on this project + how to avoid it |
 | [`docs/01_architecture.md`](docs/01_architecture.md) | Architecture, RAP-mode model, layering, 8 accepted rulebook deviations, object inventory, build order |
 | [`docs/02_functional_specification.md`](docs/02_functional_specification.md) | What each of the 18 areas does — inputs/outputs, RAP-mode, worked example per area |
 | [`docs/03_technical_specification.md`](docs/03_technical_specification.md) | Binding ABAP signatures: 19 interfaces, facade, exception, message class, DDIC, GUI class, reports |

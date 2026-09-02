@@ -8,6 +8,7 @@
    <IGNORE>
     <item>/.gitignore</item>
     <item>/.gitattributes</item>
+    <item>/CLAUDE.md</item>
     <item>/LICENSE</item>
     <item>/README.md</item>
     <item>/docs/*</item>
