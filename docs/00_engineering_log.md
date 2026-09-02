@@ -108,6 +108,8 @@ Target platform for all rules: **SAP S/4HANA 2023 on-premise, Standard ABAP (7.5
 | A19 | Classic message row → `bapiret2` line: copy field-wise via `ASSIGN COMPONENT name OF STRUCTURE` over a name list (`TYPE ID NUMBER MESSAGE MESSAGE_V1..4 …`) — **not** `MOVE-CORRESPONDING` between `TYPE any` field-symbols. Format the text with `MESSAGE ID … TYPE 'I' NUMBER … WITH … INTO lv`. |
 | A20 | `CALL TRANSACTION ta WITH AUTHORITY-CHECK USING bdc MODE m UPDATE u MESSAGES INTO mt` — S/4 requires the explicit `WITH[OUT] AUTHORITY-CHECK`. `MODE`/`UPDATE` want `ctu_params-dismode` / `-updmode` (c1). `sy-subrc <> 0` is a normal "ended with messages" result, not an exception — return the messages, don't raise. |
 | A21 | `CONSTANTS c TYPE string VALUE `a` && `b`.` is **illegal** — `VALUE` takes a single literal, no `&&`. Use one literal, or `SPLIT` a literal into a table at runtime. |
+| A22 | `AUTHORITY-CHECK` must list **every** field of the object (as `FIELD v` or `DUMMY`) or it returns `sy-subrc = 4` always. `S_USER_GRP` → `ID 'ACTVT' FIELD '05' ID 'CLASS' DUMMY`. `S_BTCH_ADM` → `ID 'BTCADMIN' FIELD 'Y'`. The OBJECT name may be a variable; ID names are literals. |
+| A23 | `cl_abap_tstmp=>subtract` needs `timestamp` args — wrap a `timestampl` field as `CONV timestamp( ts_l )` (drops sub-second, fine for elapsed timing). |
 
 ---
 
@@ -126,6 +128,7 @@ Target platform for all rules: **SAP S/4HANA 2023 on-premise, Standard ABAP (7.5
 | a280a3a | **`SYNTAX_ERROR` dump**: TAB `distinct` `COMPARING (it_fields)` (table) → comma-string; DB `read` rebuilt (conditional ORDER BY, explicit `lt_cols`, `CONV string`); CFG `enum_values` → `DD_DOMVALUES_GET`; EXCEL `col_letter` local const; STR `split` drop `COND #()` |
 | _v1.1 s3_ | `ZCL_AB_V1_UT_BULK` + `_BULK_STORE_MEM`: packaged/parallel/restart runner. `COMMIT WORK` per package sanctioned behind `iv_commit_each` (docs/01 §2). `cl_abap_parallel` local worker (A15), `cl_abap_tstmp` wrapped (A16), locals includes (G10). |
 | _v1.1 s4_ | `ZCL_AB_V1_UT_BAPI`: dynamic `CALL FUNCTION PARAMETER-TABLE` (A17), `FUPARAREF` introspection (A18), field-wise RETURN copy (A19), `CALL TRANSACTION WITH AUTHORITY-CHECK` (A20), `CONSTANTS && ` trap (A21). `BAPI_TRANSACTION_COMMIT/ROLLBACK` behind `iv_test_run` + `iv_commit_every`. |
+| _v1.1 s5_ | `ZCL_AB_V1_UT_CUTOVER`: `AUTHORITY-CHECK` field completeness (A22), `cl_abap_tstmp` CONV (A23). `task_run` orchestrates `zif_ab_v1_ut_cutover_exec`; `readiness_check` read-only diagnostics (VBHDR/TBTCO/APQI/RFC_PING); `lock_users`/`unlock_users` via `BAPI_USER_LOCK`/`_UNLOCK` (instance-scoped lock list). `suspend_jobs`/`release_jobs` report-only + clean 032 for the live mutation (no guessed scheduler API — docs/05). |
 
 ---
 

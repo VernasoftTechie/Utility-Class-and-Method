@@ -52,6 +52,19 @@ activated interface**; docs 02/03 are being updated to match.
 `ZIF_AB_V1_UT_MAIL~send` issues `COMMIT WORK` only when `is_mail-commit_work = abap_true`
 (classic / batch). `ZIF_AB_V1_UT_LOG~save` uses `BAL_DB_SAVE` on a 2nd DB connection
 (`iv_commit = abap_true`) and issues no `COMMIT` statement.
+`ZIF_AB_V1_UT_BULK~run_packaged`/`~resume` — `COMMIT WORK` per package only when
+`iv_commit_each = abap_true` (default). `ZIF_AB_V1_UT_BAPI~mass`/`~commit` — via
+`BAPI_TRANSACTION_COMMIT`, only when `iv_test_run = abap_false`.
+
+## Scope delivered vs. spec (v1.1.0 – implementation toolkit)
+
+| Interface | Delivered | Trimmed / report-only |
+|---|---|---|
+| `ZIF_AB_V1_UT_HTTP` | REST (`get/post/put/patch/delete_json`), `request`, `paginate`, `download_binary`, `upload_multipart`, OAuth2 client-credentials, retry/backoff, OData + SOAP builders | – |
+| `ZIF_AB_V1_UT_BULK` | `run_packaged`, `resume`, `run_parallel` (`CL_ABAP_PARALLEL`), `progress`; `ZCL_AB_V1_UT_BULK_STORE_MEM` in-memory store | `run_parallel` keys need a global/DDIC line type |
+| `ZIF_AB_V1_UT_BAPI` | `call`, `call_by_name` (FUPARAREF auto-bind), `mass`, `commit`, `rollback`, `bdc_run`, `bdc_dynpro`, `bdc_field` | – |
+| `ZIF_AB_V1_UT_CUTOVER` | `task_run`, `readiness_check`, `lock_users`, `unlock_users` | `suspend_jobs`/`release_jobs` **report-only** — live released↔scheduled change raises msg 032 (needs a landscape scheduler API); action via SM37 |
+| `ZIF_AB_V1_UT_TRANSPORT` | `objects_in_request`, `where_used`, `custom_code_inventory`, `locking_requests` | – |
 
 ### Remaining before release
 - ATC run (production + gated-exemption profiles), fix findings.
