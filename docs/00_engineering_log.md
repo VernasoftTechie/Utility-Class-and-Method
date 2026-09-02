@@ -110,6 +110,7 @@ Target platform for all rules: **SAP S/4HANA 2023 on-premise, Standard ABAP (7.5
 | A21 | `CONSTANTS c TYPE string VALUE `a` && `b`.` is **illegal** — `VALUE` takes a single literal, no `&&`. Use one literal, or `SPLIT` a literal into a table at runtime. |
 | A22 | `AUTHORITY-CHECK` must list **every** field of the object (as `FIELD v` or `DUMMY`) or it returns `sy-subrc = 4` always. `S_USER_GRP` → `ID 'ACTVT' FIELD '05' ID 'CLASS' DUMMY`. `S_BTCH_ADM` → `ID 'BTCADMIN' FIELD 'Y'`. The OBJECT name may be a variable; ID names are literals. |
 | A23 | `cl_abap_tstmp=>subtract` needs `timestamp` args — wrap a `timestampl` field as `CONV timestamp( ts_l )` (drops sub-second, fine for elapsed timing). |
+| A24 | Transport / repo metadata by direct SELECT (all transparent tables): request + tasks `E070` (`STRKORR` = parent), objects `E071` (`PGMID` `OBJECT` `OBJ_NAME` `LOCKFLAG`), where-used `WBCROSSGT` (`OTYPE` 2-char, `NAME`, `INCLUDE`), custom code `TADIR` (`DEVCLASS` + `OBJ_NAME LIKE 'Z%'/'Y%'` + `DELFLAG`), package existence `TDEVC`. `E070-TRSTATUS` `D`/`L` = modifiable. |
 
 ---
 
@@ -129,6 +130,7 @@ Target platform for all rules: **SAP S/4HANA 2023 on-premise, Standard ABAP (7.5
 | _v1.1 s3_ | `ZCL_AB_V1_UT_BULK` + `_BULK_STORE_MEM`: packaged/parallel/restart runner. `COMMIT WORK` per package sanctioned behind `iv_commit_each` (docs/01 §2). `cl_abap_parallel` local worker (A15), `cl_abap_tstmp` wrapped (A16), locals includes (G10). |
 | _v1.1 s4_ | `ZCL_AB_V1_UT_BAPI`: dynamic `CALL FUNCTION PARAMETER-TABLE` (A17), `FUPARAREF` introspection (A18), field-wise RETURN copy (A19), `CALL TRANSACTION WITH AUTHORITY-CHECK` (A20), `CONSTANTS && ` trap (A21). `BAPI_TRANSACTION_COMMIT/ROLLBACK` behind `iv_test_run` + `iv_commit_every`. |
 | _v1.1 s5_ | `ZCL_AB_V1_UT_CUTOVER`: `AUTHORITY-CHECK` field completeness (A22), `cl_abap_tstmp` CONV (A23). `task_run` orchestrates `zif_ab_v1_ut_cutover_exec`; `readiness_check` read-only diagnostics (VBHDR/TBTCO/APQI/RFC_PING); `lock_users`/`unlock_users` via `BAPI_USER_LOCK`/`_UNLOCK` (instance-scoped lock list). `suspend_jobs`/`release_jobs` report-only + clean 032 for the live mutation (no guessed scheduler API — docs/05). |
+| _v1.1 s6_ | `ZCL_AB_V1_UT_TRANSPORT`: E070/E071/WBCROSSGT/TADIR/TDEVC direct reads (A24). All Core / read-only. |
 
 ---
 
