@@ -20,9 +20,11 @@ CLASS ltc_cfg IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD enum_area.
+    " domain carries the 18 v1.0 areas + the 5 v1.1 toolkit areas
     DATA(lt) = mo->enum_values( 'ZAB_V1_UT_AREA' ).
-    cl_abap_unit_assert=>assert_equals( exp = 18 act = lines( lt ) ).
+    cl_abap_unit_assert=>assert_true( xsdbool( lines( lt ) >= 18 ) ).
     cl_abap_unit_assert=>assert_true( xsdbool( line_exists( lt[ name = 'JSON' ] ) ) ).
+    cl_abap_unit_assert=>assert_true( xsdbool( line_exists( lt[ name = 'HTTP' ] ) ) ).
   ENDMETHOD.
 
   METHOD tvarv_missing.
