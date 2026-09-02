@@ -25,6 +25,7 @@ Clean-Core-aligned, ATC-compliant, fully documented, repository-driven.
 | [`docs/05_version_history.md`](docs/05_version_history.md) | Change log + release plan |
 | [`docs/06_demo_guide.md`](docs/06_demo_guide.md) | Manual setup (SLG0 / SNRO / SM30) + how to run the demo reports |
 | [`docs/07_object_package_map.md`](docs/07_object_package_map.md) | Every object → package `ZABAP_UTIL` |
+| [`docs/08_implementation_toolkit.md`](docs/08_implementation_toolkit.md) | v1.1.0 spec — HTTP / BULK / BAPI / CUTOVER / TRANSPORT areas |
 | `src/` | ABAP objects (abapGit, `/src/` flat, FOLDER_LOGIC `PREFIX`, package `ZABAP_UTIL`) |
 
 ---
