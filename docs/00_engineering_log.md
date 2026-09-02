@@ -131,6 +131,7 @@ Target platform for all rules: **SAP S/4HANA 2023 on-premise, Standard ABAP (7.5
 | _v1.1 s4_ | `ZCL_AB_V1_UT_BAPI`: dynamic `CALL FUNCTION PARAMETER-TABLE` (A17), `FUPARAREF` introspection (A18), field-wise RETURN copy (A19), `CALL TRANSACTION WITH AUTHORITY-CHECK` (A20), `CONSTANTS && ` trap (A21). `BAPI_TRANSACTION_COMMIT/ROLLBACK` behind `iv_test_run` + `iv_commit_every`. |
 | _v1.1 s5_ | `ZCL_AB_V1_UT_CUTOVER`: `AUTHORITY-CHECK` field completeness (A22), `cl_abap_tstmp` CONV (A23). `task_run` orchestrates `zif_ab_v1_ut_cutover_exec`; `readiness_check` read-only diagnostics (VBHDR/TBTCO/APQI/RFC_PING); `lock_users`/`unlock_users` via `BAPI_USER_LOCK`/`_UNLOCK` (instance-scoped lock list). `suspend_jobs`/`release_jobs` report-only + clean 032 for the live mutation (no guessed scheduler API — docs/05). |
 | _v1.1 s6_ | `ZCL_AB_V1_UT_TRANSPORT`: E070/E071/WBCROSSGT/TADIR/TDEVC direct reads (A24). All Core / read-only. |
+| _v1.1 s7-8_ | Facade `http()`/`bulk()`/`bapi()`/`cutover()`/`transport()` + seams. `ZAB_V1_UT_DEMO_INT` report + `ZCL_AB_V1_UT_DEMO_BULK_H` global handler (needed because `run_parallel` takes a global class name). Char literals to `zab_v1_ut_area` / `seoclsname` params via `CONV #( )` (T2). `abap_func_parmbind_tab` is keyed — build with `INSERT ... INTO TABLE`, not an ordered `VALUE #( )`. |
 
 ---
 

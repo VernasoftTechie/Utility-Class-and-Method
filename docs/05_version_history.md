@@ -79,6 +79,7 @@ activated interface**; docs 02/03 are being updated to match.
 |---|---|---|---|
 | — | 2026-08-31 | Vernasoft AI | Document set created; architecture v2 (full 18-area catalogue, gated helpers included, `ZAB_V1_UT_*` naming) drafted for approval. |
 | — | 2026-09-01 | Vernasoft AI | Approved. Build stages 1–3a pushed. Activation fixes: data element `ZAB_V1_UT_AREA` label lengths; `RETURNING` params generic `TYPE p` → `TYPE decfloat34` in `_STR`/`_CONV`; `_CONV` `iv_rate_type` `kurst_curr`→`kurst`; `_MAIL` `ty_mail-to`→`recipients`, `commit`→`commit_work`. |
+| — | 2026-09-02 | Vernasoft AI | v1.1.0 implementation toolkit built (stages 1–8): DDIC + msgs 021–035 + 11 interfaces; `ZCL_AB_V1_UT_HTTP` (classic `cl_http_client`); `ZCL_AB_V1_UT_BULK` + `_BULK_STORE_MEM` (`cl_abap_parallel` worker); `ZCL_AB_V1_UT_BAPI` (FUPARAREF auto-bind, BDC); `ZCL_AB_V1_UT_CUTOVER`; `ZCL_AB_V1_UT_TRANSPORT`; facade accessors + seams; `ZAB_V1_UT_DEMO_INT` + `ZCL_AB_V1_UT_DEMO_BULK_H`. Engineering log extended to A24 / G10. Pending: ATC on package + C1 release extension. |
 | **v1.0.0** | 2026-09-02 | Vernasoft AI | **All 18 areas implemented, activated in S/4HANA 2023.** 22 classes (facade + 18 area impls + `ZCX_AB_V1_UT` + `ZCL_AB_V1_UT_PHASE` + `ZCL_AB_V1_UT_GUI`), 19 interfaces, message class, 3 DDIC objects, 2 demo reports, 13 ABAP Unit classes. See §"Scope delivered vs. spec" below. Pending: ATC run + C1 release. |
 
 ---

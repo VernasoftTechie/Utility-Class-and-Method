@@ -115,6 +115,25 @@ If run without a SAP GUI (e.g. background), it raises `ZAB_V1_UT` msg 011 and ex
 
 ---
 
+## 4b. Running `ZAB_V1_UT_DEMO_INT` (v1.1.0 implementation toolkit)
+
+`SE38` → `ZAB_V1_UT_DEMO_INT`. Headless — safe in the background. Pick a **Toolkit area**
+(`HTTP` / `BULK` / `BAPI` / `CUTOVER` / `TRANSPORT`) or tick **Run all**.
+
+| Area | What runs by default (read-only) | Extra with a flag |
+|---|---|---|
+| `HTTP` | fluent config, `set_auth_*`, `odata_filter`, `odata_query`, `soap_envelope` | `p_url` → live `request( GET )` |
+| `BULK` | `run_packaged` (25 keys / pkg 10), `progress`, `resume` from a seeded checkpoint | `p_par` → `run_parallel` via `ZCL_AB_V1_UT_DEMO_BULK_H` (spawns work processes) |
+| `BAPI` | `call_by_name( RFC_SYSTEM_INFO )`, `call( BAPI_USER_EXISTENCE_CHECK )`, `bdc_dynpro` + `bdc_field` | `p_side` → `mass` (test-run) + `rollback` |
+| `CUTOVER` | `readiness_check`, `task_run` (local executor), `suspend_jobs` report-only | `p_side` → `lock_users` + `unlock_users`, live `suspend_jobs` / `release_jobs` (raise msg 032) |
+| `TRANSPORT` | `custom_code_inventory( p_pkg )`, `where_used( ZCL_AB_V1_UT )`, `locking_requests` | `p_trk` → `objects_in_request` |
+
+`p_side` gates every side-effecting call. `lock_users` needs `S_USER_GRP` `ACTVT 05`;
+job helpers need `S_BTCH_ADM`. Live `suspend_jobs` / `release_jobs` always report msg 032
+(action the listed jobs via SM37 — see `05_version_history.md`).
+
+---
+
 ## 5. Consuming the framework from a RAP business object
 
 ```abap
