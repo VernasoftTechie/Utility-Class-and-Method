@@ -5,13 +5,11 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_AB_V1_UT_BULK_STORE_MEM</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>ZCL_AB_V1_UT: in-memory bulk store</DESCRIPT>
+    <DESCRIPT>ZCL_AB_V1_UT: in-memory bulk checkpoint store</DESCRIPT>
     <STATE>1</STATE>
     <CLSFINAL>X</CLSFINAL>
-    <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>
     <UNICODE>X</UNICODE>
-    <WITH_UNIT_TESTS>X</WITH_UNIT_TESTS>
    </VSEOCLASS>
   </asx:values>
  </asx:abap>

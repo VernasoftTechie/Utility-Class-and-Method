@@ -42,11 +42,17 @@ application-server file I/O) isolated behind their own interfaces.
 
 ### Cross-cutting hard rules (enforced by ATC + a dependency unit test)
 
-1. No `COMMIT WORK` / `ROLLBACK` anywhere in the framework, with **one sanctioned
-   exception**: `ZIF_AB_V1_UT_MAIL~send` issues `COMMIT WORK` *only* when the caller
-   passes `is_mail-commit_work = abap_true` (classic report / batch use). RAP callers
-   leave it unset and let the LUW / saver commit. `ZIF_AB_V1_UT_LOG~save` avoids the
-   statement entirely by using `BAL_DB_SAVE` on a secondary DB connection.
+1. No `COMMIT WORK` / `ROLLBACK` anywhere in the framework, with **sanctioned
+   exceptions**, each caller-opt-in and off for RAP:
+   - `ZIF_AB_V1_UT_MAIL~send` issues `COMMIT WORK` *only* when the caller passes
+     `is_mail-commit_work = abap_true` (classic report / batch use). RAP callers leave
+     it unset and let the LUW / saver commit.
+   - `ZIF_AB_V1_UT_BULK~run_packaged` / `~resume` issue `COMMIT WORK` after each package
+     *only* when the caller passes `iv_commit_each = abap_true` (default; the standard
+     mass-processing pattern — bounded LUW per package, DB locks released, restartable).
+     RAP / LUW-owning callers pass `iv_commit_each = abap_false`.
+   `ZIF_AB_V1_UT_LOG~save` avoids the statement entirely by using `BAL_DB_SAVE` on a
+   secondary DB connection.
 2. No `MESSAGE` to screen, no `CALL SCREEN/TRANSACTION/DIALOG` in the core.
    `SUBMIT ... VIA JOB ... AND RETURN` is allowed in `ZIF_AB_V1_UT_JOB~schedule_job` (Defer).
 3. No `cl_gui_*` / `cl_salv_*` reference reachable from `ZCL_AB_V1_UT` (asserted by test).

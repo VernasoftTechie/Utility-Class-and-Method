@@ -34,6 +34,7 @@ Target platform for all rules: **SAP S/4HANA 2023 on-premise, Standard ABAP (7.5
 | G7 | `.abapgit.xml` `<IGNORE>` must list `/README.md`, `/docs/*`, `/.gitattributes`, `/.gitignore`, `/LICENSE`, `/CLAUDE.md`. |
 | G8 | Add `.gitattributes` forcing `eol=lf` for `*.abap` / `*.xml` — abapGit expects LF. |
 | G9 | Package: one flat `/src/`, `FOLDER_LOGIC=PREFIX`, `STARTING_FOLDER=/src/`. `src/package.devc.xml` supplies only the short text (`<CTEXT>`); the package **name** comes from the abapGit repo link at pull time. All objects land in that one package. |
+| G10 | Local classes of a global class → abapGit files `*.clas.locals_def.abap` (CCDEF) + `*.clas.locals_imp.abap` (CCIMP), and the `.clas.xml` needs `<CLSCCINCL>X</CLSCCINCL>`. Keep the XML flags consistent with the files that actually exist: `<WITH_UNIT_TESTS>X</WITH_UNIT_TESTS>` only when `*.clas.testclasses.abap` is present; drop `CLSCCINCL` when there is no locals include. Mismatch = confusing import warnings. |
 
 ---
 
@@ -100,6 +101,8 @@ Target platform for all rules: **SAP S/4HANA 2023 on-premise, Standard ABAP (7.5
 | A12 | `xstring` literals are hex: `DATA x TYPE xstring VALUE '48656C6C6F'.`. `CONV xstring( '48656C6C6F' )` does char→byte (wrong). `|{ xstr }|` renders uppercase hex. |
 | A13 | `BAL_DB_SAVE` — pass `i_2th_connection` / `i_2th_connect_commit` as **`abap_true` literals via an `IF` branch**, not `xsdbool( … )` (temp-var type mismatch with the formal). |
 | A14 | `NUMBER_GET_INFO` `INTERVAL` importing param — pre-declare `DATA ls_int TYPE inriv.` (no inline `DATA()`). |
+| A15 | **Parallel processing** → `cl_abap_parallel`: subclass (a **local** class in a global class pool is fine — reachable in the child work processes), `METHODS do REDEFINITION` (params `p_in TYPE xstring` / `p_out TYPE xstring`), then `run_inst( EXPORTING p_in_tab = t_in_tab p_num_tasks = i IMPORTING p_out_tab = t_out_tab )`. Out line field `-result` (xstring). `run_inst` (not `run`) so instance attributes reach the child WPs. Marshal packages as JSON via `/ui2/cl_json` + `cl_abap_codepage`. Parallel key tables need a **global/DDIC line type** (RTTI `get_relative_name( )` non-initial) so the child can `CREATE DATA … TYPE (name)`. If ATC flags the `t_in_tab`/`t_out_tab`/param names on 7.58, correct them — the pattern is right. |
+| A16 | `cl_abap_tstmp=>subtract( tstmp1 tstmp2 )` → seconds as `tzntstmpl`; importing params are `TYPE timestamp`; it *raises* `cx_parameter_invalid_range` / `cx_parameter_invalid_type` (dynamic check — no compiler enforcement, but can dump). Wrap in `TRY … CATCH cx_root`. `GET TIME STAMP FIELD lv TYPE timestamp` for the endpoints. |
 
 ---
 
@@ -116,6 +119,7 @@ Target platform for all rules: **SAP S/4HANA 2023 on-premise, Standard ABAP (7.5
 | 84ee212/88da13b | demo `<TPOOL>`; listbox `VRM_SET_VALUES`; `TEXT-t01` (c) vs `iv_title` (string) → `csequence` + backtick literals; LOG `balobj` guard; `WRITE` intermediate var |
 | 643e6a1 | NUM `tnro` guard before number-range runtime |
 | a280a3a | **`SYNTAX_ERROR` dump**: TAB `distinct` `COMPARING (it_fields)` (table) → comma-string; DB `read` rebuilt (conditional ORDER BY, explicit `lt_cols`, `CONV string`); CFG `enum_values` → `DD_DOMVALUES_GET`; EXCEL `col_letter` local const; STR `split` drop `COND #()` |
+| _v1.1 s3_ | `ZCL_AB_V1_UT_BULK` + `_BULK_STORE_MEM`: packaged/parallel/restart runner. `COMMIT WORK` per package sanctioned behind `iv_commit_each` (docs/01 §2). `cl_abap_parallel` local worker (A15), `cl_abap_tstmp` wrapped (A16), locals includes (G10). |
 
 ---
 
