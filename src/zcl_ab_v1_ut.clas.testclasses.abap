@@ -7,6 +7,7 @@ CLASS ltc_facade DEFINITION FINAL FOR TESTING
   PRIVATE SECTION.
     METHODS teardown.
     METHODS accessors_are_singletons FOR TESTING.
+    METHODS toolkit_accessors         FOR TESTING.
     METHODS injection_and_reset       FOR TESTING.
     METHODS phase_roundtrip           FOR TESTING.
     METHODS no_gui_dependencies       FOR TESTING.
@@ -29,6 +30,24 @@ CLASS ltc_facade IMPLEMENTATION.
     cl_abap_unit_assert=>assert_bound( zcl_ab_v1_ut=>msg( ) ).
     cl_abap_unit_assert=>assert_bound( zcl_ab_v1_ut=>sys( ) ).
     cl_abap_unit_assert=>assert_bound( zcl_ab_v1_ut=>rap( ) ).
+  ENDMETHOD.
+
+  METHOD toolkit_accessors.
+    " bulk / bapi / cutover / transport: lazy singletons
+    cl_abap_unit_assert=>assert_bound( zcl_ab_v1_ut=>bulk( ) ).
+    cl_abap_unit_assert=>assert_true( xsdbool( zcl_ab_v1_ut=>bulk( )      = zcl_ab_v1_ut=>bulk( ) ) ).
+    cl_abap_unit_assert=>assert_true( xsdbool( zcl_ab_v1_ut=>bapi( )      = zcl_ab_v1_ut=>bapi( ) ) ).
+    cl_abap_unit_assert=>assert_true( xsdbool( zcl_ab_v1_ut=>cutover( )   = zcl_ab_v1_ut=>cutover( ) ) ).
+    cl_abap_unit_assert=>assert_true( xsdbool( zcl_ab_v1_ut=>transport( ) = zcl_ab_v1_ut=>transport( ) ) ).
+
+    " http: a fresh consumer each call (fluent + stateful)
+    cl_abap_unit_assert=>assert_bound( zcl_ab_v1_ut=>http( ) ).
+    cl_abap_unit_assert=>assert_false( xsdbool( zcl_ab_v1_ut=>http( ) = zcl_ab_v1_ut=>http( ) ) ).
+
+    " http seam pins the instance
+    DATA(lo_http) = zcl_ab_v1_ut=>http( ).
+    zcl_ab_v1_ut=>set_http( lo_http ).
+    cl_abap_unit_assert=>assert_true( xsdbool( lo_http = zcl_ab_v1_ut=>http( ) ) ).
   ENDMETHOD.
 
   METHOD injection_and_reset.

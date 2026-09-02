@@ -29,6 +29,14 @@ CLASS zcl_ab_v1_ut DEFINITION
     CLASS-METHODS rap    RETURNING VALUE(ro) TYPE REF TO zif_ab_v1_ut_rap.
     CLASS-METHODS job    RETURNING VALUE(ro) TYPE REF TO zif_ab_v1_ut_job.
 
+    "--- v1.1 implementation toolkit --------------------------------------
+    "! A NEW HTTP consumer each call (stateful fluent config - not a singleton).
+    CLASS-METHODS http      RETURNING VALUE(ro) TYPE REF TO zif_ab_v1_ut_http.
+    CLASS-METHODS bulk      RETURNING VALUE(ro) TYPE REF TO zif_ab_v1_ut_bulk.
+    CLASS-METHODS bapi      RETURNING VALUE(ro) TYPE REF TO zif_ab_v1_ut_bapi.
+    CLASS-METHODS cutover   RETURNING VALUE(ro) TYPE REF TO zif_ab_v1_ut_cutover.
+    CLASS-METHODS transport RETURNING VALUE(ro) TYPE REF TO zif_ab_v1_ut_transport.
+
     "--- RAP phase context (drives the Defer guard) ------------------------
     CLASS-METHODS set_phase IMPORTING iv_phase TYPE zif_ab_v1_ut_types=>ty_phase.
     CLASS-METHODS phase     RETURNING VALUE(rv) TYPE zif_ab_v1_ut_types=>ty_phase.
@@ -51,6 +59,11 @@ CLASS zcl_ab_v1_ut DEFINITION
     CLASS-METHODS set_cfg    IMPORTING io TYPE REF TO zif_ab_v1_ut_cfg.
     CLASS-METHODS set_rap    IMPORTING io TYPE REF TO zif_ab_v1_ut_rap.
     CLASS-METHODS set_job    IMPORTING io TYPE REF TO zif_ab_v1_ut_job.
+    CLASS-METHODS set_http      IMPORTING io TYPE REF TO zif_ab_v1_ut_http.
+    CLASS-METHODS set_bulk      IMPORTING io TYPE REF TO zif_ab_v1_ut_bulk.
+    CLASS-METHODS set_bapi      IMPORTING io TYPE REF TO zif_ab_v1_ut_bapi.
+    CLASS-METHODS set_cutover   IMPORTING io TYPE REF TO zif_ab_v1_ut_cutover.
+    CLASS-METHODS set_transport IMPORTING io TYPE REF TO zif_ab_v1_ut_transport.
     CLASS-METHODS reset.
 
   PRIVATE SECTION.
@@ -71,7 +84,12 @@ CLASS zcl_ab_v1_ut DEFINITION
       go_sys    TYPE REF TO zif_ab_v1_ut_sys,
       go_cfg    TYPE REF TO zif_ab_v1_ut_cfg,
       go_rap    TYPE REF TO zif_ab_v1_ut_rap,
-      go_job    TYPE REF TO zif_ab_v1_ut_job.
+      go_job    TYPE REF TO zif_ab_v1_ut_job,
+      go_http      TYPE REF TO zif_ab_v1_ut_http,
+      go_bulk      TYPE REF TO zif_ab_v1_ut_bulk,
+      go_bapi      TYPE REF TO zif_ab_v1_ut_bapi,
+      go_cutover   TYPE REF TO zif_ab_v1_ut_cutover,
+      go_transport TYPE REF TO zif_ab_v1_ut_transport.
 
     CLASS-METHODS resolve_attach RETURNING VALUE(ro) TYPE REF TO zif_ab_v1_ut_attach.
 ENDCLASS.
@@ -200,6 +218,44 @@ CLASS zcl_ab_v1_ut IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD http.
+    " fluent + stateful: a fresh consumer per call unless a test seam is set
+    IF go_http IS BOUND.
+      ro = go_http.
+    ELSE.
+      ro = NEW zcl_ab_v1_ut_http( ).
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD bulk.
+    IF go_bulk IS NOT BOUND.
+      go_bulk = NEW zcl_ab_v1_ut_bulk( ).
+    ENDIF.
+    ro = go_bulk.
+  ENDMETHOD.
+
+  METHOD bapi.
+    IF go_bapi IS NOT BOUND.
+      go_bapi = NEW zcl_ab_v1_ut_bapi( ).
+    ENDIF.
+    ro = go_bapi.
+  ENDMETHOD.
+
+  METHOD cutover.
+    IF go_cutover IS NOT BOUND.
+      go_cutover = NEW zcl_ab_v1_ut_cutover( ).
+    ENDIF.
+    ro = go_cutover.
+  ENDMETHOD.
+
+  METHOD transport.
+    IF go_transport IS NOT BOUND.
+      go_transport = NEW zcl_ab_v1_ut_transport( ).
+    ENDIF.
+    ro = go_transport.
+  ENDMETHOD.
+
+
   METHOD resolve_attach.
     SELECT SINGLE adapter_class FROM zab_v1_ut_adpt
       INTO @DATA(lv_class)
@@ -246,10 +302,16 @@ CLASS zcl_ab_v1_ut IMPLEMENTATION.
   METHOD set_cfg.    go_cfg    = io. ENDMETHOD.
   METHOD set_rap.    go_rap    = io. ENDMETHOD.
   METHOD set_job.    go_job    = io. ENDMETHOD.
+  METHOD set_http.      go_http      = io. ENDMETHOD.
+  METHOD set_bulk.      go_bulk      = io. ENDMETHOD.
+  METHOD set_bapi.      go_bapi      = io. ENDMETHOD.
+  METHOD set_cutover.   go_cutover   = io. ENDMETHOD.
+  METHOD set_transport. go_transport = io. ENDMETHOD.
 
   METHOD reset.
     CLEAR: go_str, go_conv, go_tab, go_db, go_file, go_excel, go_json, go_log,
-           go_msg, go_auth, go_num, go_mail, go_attach, go_sys, go_cfg, go_rap, go_job.
+           go_msg, go_auth, go_num, go_mail, go_attach, go_sys, go_cfg, go_rap, go_job,
+           go_http, go_bulk, go_bapi, go_cutover, go_transport.
     zcl_ab_v1_ut_phase=>set( zif_ab_v1_ut_types=>c_phase-unknown ).
   ENDMETHOD.
 

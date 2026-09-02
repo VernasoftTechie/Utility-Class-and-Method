@@ -61,6 +61,15 @@ below (current and future) are created in `ZABAP_UTIL`.** No per-object mapping 
 | `ZIF_AB_V1_UT_CFG` | `src/zif_ab_v1_ut_cfg.intf.*` | `ZABAP_UTIL` |
 | `ZIF_AB_V1_UT_RAP` | `src/zif_ab_v1_ut_rap.intf.*` | `ZABAP_UTIL` |
 | `ZIF_AB_V1_UT_JOB` | `src/zif_ab_v1_ut_job.intf.*` | `ZABAP_UTIL` |
+| `ZIF_AB_V1_UT_HTTP` | `src/zif_ab_v1_ut_http.intf.*` | `ZABAP_UTIL` |
+| `ZIF_AB_V1_UT_HTTP_PAGE` | `src/zif_ab_v1_ut_http_page.intf.*` | `ZABAP_UTIL` |
+| `ZIF_AB_V1_UT_BULK` | `src/zif_ab_v1_ut_bulk.intf.*` | `ZABAP_UTIL` |
+| `ZIF_AB_V1_UT_BULK_HANDLER` | `src/zif_ab_v1_ut_bulk_handler.intf.*` | `ZABAP_UTIL` |
+| `ZIF_AB_V1_UT_BULK_STORE` | `src/zif_ab_v1_ut_bulk_store.intf.*` | `ZABAP_UTIL` |
+| `ZIF_AB_V1_UT_BAPI` | `src/zif_ab_v1_ut_bapi.intf.*` | `ZABAP_UTIL` |
+| `ZIF_AB_V1_UT_CUTOVER` | `src/zif_ab_v1_ut_cutover.intf.*` | `ZABAP_UTIL` |
+| `ZIF_AB_V1_UT_CUTOVER_EXEC` | `src/zif_ab_v1_ut_cutover_exec.intf.*` | `ZABAP_UTIL` |
+| `ZIF_AB_V1_UT_TRANSPORT` | `src/zif_ab_v1_ut_transport.intf.*` | `ZABAP_UTIL` |
 
 ## Classes (22)
 
@@ -87,6 +96,12 @@ below (current and future) are created in `ZABAP_UTIL`.** No per-object mapping 
 | `ZCL_AB_V1_UT_PHASE` | committed | `src/zcl_ab_v1_ut_phase.clas.*` | `ZABAP_UTIL` |
 | `ZCL_AB_V1_UT` (facade) | committed | `src/zcl_ab_v1_ut.clas.*` | `ZABAP_UTIL` |
 | `ZCL_AB_V1_UT_GUI` | committed | `src/zcl_ab_v1_ut_gui.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_HTTP` | committed | `src/zcl_ab_v1_ut_http.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_BULK` | committed | `src/zcl_ab_v1_ut_bulk.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_BULK_STORE_MEM` | committed | `src/zcl_ab_v1_ut_bulk_store_mem.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_BAPI` | committed | `src/zcl_ab_v1_ut_bapi.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_CUTOVER` | committed | `src/zcl_ab_v1_ut_cutover.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_TRANSPORT` | committed | `src/zcl_ab_v1_ut_transport.clas.*` | `ZABAP_UTIL` |
 
 ## Reports (2)
 
