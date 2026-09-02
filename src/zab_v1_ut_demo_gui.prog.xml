@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <abapGit version="v1.0.0" serializer="LCL_OBJECT_PROG" serializer_version="v1.0.0">
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
@@ -20,31 +20,31 @@
      <ID>I</ID>
      <KEY>B01</KEY>
      <ENTRY>What to demo</ENTRY>
-     <LENGTH>11</LENGTH>
+     <LENGTH>12</LENGTH>
     </item>
     <item>
      <ID>S</ID>
      <KEY>P_ALV</KEY>
      <ENTRY>Static ALV from an internal table</ENTRY>
-     <LENGTH>33</LENGTH>
+     <LENGTH>41</LENGTH>
     </item>
     <item>
      <ID>S</ID>
      <KEY>P_DYN</KEY>
      <ENTRY>Dynamic ALV from a data reference</ENTRY>
-     <LENGTH>32</LENGTH>
+     <LENGTH>41</LENGTH>
     </item>
     <item>
      <ID>S</ID>
      <KEY>P_FCAT</KEY>
      <ENTRY>Generate LVC field catalog</ENTRY>
-     <LENGTH>26</LENGTH>
+     <LENGTH>34</LENGTH>
     </item>
     <item>
      <ID>S</ID>
      <KEY>P_FILE</KEY>
      <ENTRY>Pick / upload / download a file</ENTRY>
-     <LENGTH>30</LENGTH>
+     <LENGTH>39</LENGTH>
     </item>
    </TPOOL>
   </asx:values>
