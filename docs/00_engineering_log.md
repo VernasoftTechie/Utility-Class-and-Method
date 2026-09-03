@@ -3,6 +3,10 @@
 > **Read this before writing or changing any ABAP / abapGit object in this repo, and
 > before concluding that something "should work".** Every entry below cost at least one
 > pull → activate → ATC → fix cycle. Do not repeat them.
+>
+> **Before every commit that touches ABAP, walk [§7 – the pre-commit checklist](#7-checklist-before-committing-abap).**
+> When a new bug is found and fixed, add it here (the right section **and** the §6
+> fix-history table) in the same change.
 
 Target platform for all rules: **SAP S/4HANA 2023 on-premise, Standard ABAP (7.58)**.
 
@@ -18,6 +22,7 @@ Target platform for all rules: **SAP S/4HANA 2023 on-premise, Standard ABAP (7.5
 | P4 | Architecture / spec approval **before** implementation (Rulebook §8). Stage commits: foundation → interfaces → impls → facade → GUI → reports. |
 | P5 | Put `##NO_TEXT` on diagnostic string literals passed as message parameters, and on demo `WRITE` output, to keep ATC's "Strings without text elements" quiet. |
 | P6 | Every genuine runtime failure path must raise `ZCX_AB_V1_UT` — **never let an FM dump**. Guard by existence check first (see #33). |
+| P7 | **Activation order: prerequisites before dependents.** *"Method `HTTP` is unknown or PROTECTED or PRIVATE"* on report `ZAB_V1_UT_DEMO_INT` while the new facade sits inactive = the report was checked against the *currently active* (old) `ZCL_AB_V1_UT`. In the abapGit "Inactive Objects" worklist, **select all → Activate** (SAP resolves the graph), or activate in waves: interfaces → impl classes → **facade** → reports. If a wave fails, fix it before the next; a report will never see a method the facade doesn't have *active*. |
 
 ---
 
@@ -36,6 +41,8 @@ Target platform for all rules: **SAP S/4HANA 2023 on-premise, Standard ABAP (7.5
 | G9 | Package: one flat `/src/`, `FOLDER_LOGIC=PREFIX`, `STARTING_FOLDER=/src/`. `src/package.devc.xml` supplies only the short text (`<CTEXT>`); the package **name** comes from the abapGit repo link at pull time. All objects land in that one package. |
 | G10 | Local classes of a global class → abapGit files `*.clas.locals_def.abap` (CCDEF) + `*.clas.locals_imp.abap` (CCIMP), and the `.clas.xml` needs `<CLSCCINCL>X</CLSCCINCL>`. Keep the XML flags consistent with the files that actually exist: `<WITH_UNIT_TESTS>X</WITH_UNIT_TESTS>` only when `*.clas.testclasses.abap` is present; drop `CLSCCINCL` when there is no locals include. Mismatch = confusing import warnings. |
 | G11 | **Hand-written serialization never round-trips.** abapGit re-serializes the active object on every pull and diffs it against the repo file, so non-canonical XML shows *every object as "different" forever*. Fix = one abapGit **Stage → commit → push** ("Sync") to canonicalize the whole repo (done 2026-09-02, commit `c873e4a`). After that: abapGit writes **every `*.xml` with a UTF-8 BOM** (`EF BB BF`) and every `*.abap` **without** one. Any *new* hand-authored `.xml` must start with the BOM or it re-introduces the diff. `.clas.xml` canonical form drops `<CLSFINAL>`/`<DESCRIPT>` ordering quirks and keeps only the fields the system actually has; DDIC XML (`.doma`/`.dtel`/`.tabl`/`.msag`) becomes the full `DD0x` form — don't fight it, let the next Sync fix a new object's XML. |
+| G12 | **A "Sync" push serializes the *system's active* object over the repo.** If the system has an empty/older version of an object (a failed earlier pull, a manual delete), the Sync overwrites the good repo copy with the empty one — `ZAB_V1_UT_DEMO_GUI` source was wiped this way (restored from history in `a24f455`). After any user-side Sync, `git diff` the incoming commit for **deletions in `*.abap`** and restore genuine losses from history. |
+| G13 | **Selective pull leaves objects perpetually "different".** Ticking one object in the abapGit pull screen and clicking Continue pulls *only that one*; the rest keep showing every pull because they were never actually brought in line. To get a clean state, select **all** and pull, then activate all. |
 
 ---
 
@@ -133,19 +140,46 @@ Target platform for all rules: **SAP S/4HANA 2023 on-premise, Standard ABAP (7.5
 | _v1.1 s5_ | `ZCL_AB_V1_UT_CUTOVER`: `AUTHORITY-CHECK` field completeness (A22), `cl_abap_tstmp` CONV (A23). `task_run` orchestrates `zif_ab_v1_ut_cutover_exec`; `readiness_check` read-only diagnostics (VBHDR/TBTCO/APQI/RFC_PING); `lock_users`/`unlock_users` via `BAPI_USER_LOCK`/`_UNLOCK` (instance-scoped lock list). `suspend_jobs`/`release_jobs` report-only + clean 032 for the live mutation (no guessed scheduler API — docs/05). |
 | _v1.1 s6_ | `ZCL_AB_V1_UT_TRANSPORT`: E070/E071/WBCROSSGT/TADIR/TDEVC direct reads (A24). All Core / read-only. |
 | _v1.1 s7-8_ | Facade `http()`/`bulk()`/`bapi()`/`cutover()`/`transport()` + seams. `ZAB_V1_UT_DEMO_INT` report + `ZCL_AB_V1_UT_DEMO_BULK_H` global handler (needed because `run_parallel` takes a global class name). Char literals to `zab_v1_ut_area` / `seoclsname` params via `CONV #( )` (T2). `abap_func_parmbind_tab` is keyed — build with `INSERT ... INTO TABLE`, not an ordered `VALUE #( )`. |
+| c873e4a | **User abapGit "Sync"** — canonicalized every `*.xml` (BOM added), fixing the "all objects differ on every pull" loop (G11). Also collapsed `zab_v1_ut.msag.xml` / `zab_v1_ut_area.doma.xml` to the full `DD0x` form. |
+| b6ab9a4 | `docs/09_unit_test_reference.md` — every method → its ABAP Unit test, coverage table, all-green prerequisites, v1.1 test patterns. |
+| a24f455 | Sync wiped `ZAB_V1_UT_DEMO_GUI` source → restored from `9edaae4` (G12). `CFG~enum_area` asserted exactly 18 domain values; v1.1 added 5 → relaxed to `>= 18` + checks `JSON`/`HTTP` present. P7 (facade-active-before-report). |
 
 ---
 
 ## 7. Checklist before committing ABAP
 
-- [ ] Every `RETURNING` param has a complete type (no generic `p`/`numeric`/`any`).
-- [ ] No text symbol / `c` field passed to a `TYPE string` by-ref formal.
-- [ ] No `COND #(` / `SWITCH #(` without a typed target or explicit `COND type(`.
-- [ ] No `ANY TABLE` param with index ops; no `APPEND` on non-index tables.
-- [ ] No offset access on a method-call result.
-- [ ] No dynamic `COMPARING (table)`; no unconditional dynamic `ORDER BY ()`.
-- [ ] Every raising call is `RAISING`-declared or `CATCH`-wrapped (incl. `cx_uuid_error`).
-- [ ] Every FM that can `MESSAGE X` on bad input is preceded by an existence guard.
-- [ ] `.clas.abap` ↔ `.clas.xml` (and `.prog.abap` ↔ `.prog.xml`) both present.
-- [ ] Diagnostic literals carry `##NO_TEXT`.
-- [ ] Ran (or asked the user to run) ATC on the package and cleared every syntax finding.
+**Read this list before every ABAP commit.** Each box is a bug that already cost a cycle.
+
+_Types & signatures_
+- [ ] Every `RETURNING` param has a complete type (no generic `p`/`numeric`/`any`). (T1)
+- [ ] No text symbol / `c` field passed to a `TYPE string` by-ref formal — use `csequence`/`clike`/`VALUE(... ) TYPE string`. (T2/T3)
+- [ ] `DEFAULT` values are type-compatible (no `c`-constant default on a `string` param). (T4)
+- [ ] No `COND #(` / `SWITCH #(` without a typed target or explicit `COND type(`. (T5)
+- [ ] No `VALUE t( itab[ i ] OPTIONAL )`; no offset access on a method-call result. (T6/S5)
+- [ ] `CONSTANTS ... VALUE` is a single literal — no `&&`. (A21)
+
+_Tables & statements_
+- [ ] No `ANY TABLE` param with index ops; `APPEND` only on index tables. (S3/S4)
+- [ ] No dynamic `COMPARING (table)`; no unconditional dynamic `ORDER BY ()`. (S1/S2)
+- [ ] `AUTHORITY-CHECK` lists **every** field of the object (`FIELD`/`DUMMY`). (A22)
+- [ ] `abap_func_parmbind_tab` built with `INSERT ... INTO TABLE` (keyed, not ordered `VALUE #()`).
+
+_Exceptions & dumps (no method may dump)_
+- [ ] Every raising call is `RAISING`-declared or `CATCH`-wrapped (incl. `cx_uuid_error`, `cl_abap_tstmp`, dynamic `CALL FUNCTION`). (E1/E2/A16/A17)
+- [ ] Every FM that can `MESSAGE X` on bad input has an existence guard first (`balobj`, `tnro`, table name, package, request, FM name). (E4)
+- [ ] `sy-subrc` checked after every `CALL FUNCTION ... EXCEPTIONS` / `CALL TRANSACTION`. (S11/A20)
+- [ ] No `COMMIT WORK` outside the sanctioned cases in `01` §2 (MAIL flag; BULK `iv_commit_each`; BAPI `iv_test_run`).
+
+_abapGit / serialization_
+- [ ] `.clas.abap` ↔ `.clas.xml` (and `.prog.abap` ↔ `.prog.xml`) both present. (G6)
+- [ ] Any **new** hand-authored `*.xml` starts with a UTF-8 BOM. (G11)
+- [ ] `.clas.xml` flags match the files that exist — `WITH_UNIT_TESTS` iff `*.testclasses.abap`, `CLSCCINCL` iff a locals include. (G10)
+- [ ] New `*.prog.xml` has a `<TPOOL>` (title + `B##` block texts + `S` selection texts). (G1)
+- [ ] After a user "Sync": `git diff` the incoming commit for deletions in `*.abap`; restore genuine losses. (G12)
+
+_Behaviour & tests_
+- [ ] Diagnostic literals carry `##NO_TEXT`. (P5)
+- [ ] New public method has a working line in `ZAB_V1_UT_DEMO` / `_DEMO_GUI` / `_DEMO_INT`.
+- [ ] Added a unit test (or recorded why not) in `docs/09`; a changed DDIC list (e.g. new domain values) → bump/relax the dependent asserts.
+- [ ] New bug found this session → appended to the right section above **and** the fix-history table.
+- [ ] Asked the user to run ATC/SLIN on `ZABAP_UTIL` and cleared every syntax finding. Activation order for the pull: interfaces → impls → **facade** → reports. (P1/P7)
