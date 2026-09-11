@@ -119,6 +119,7 @@ Target platform for all rules: **SAP S/4HANA 2023 on-premise, Standard ABAP (7.5
 | A22 | `AUTHORITY-CHECK` must list **every** field of the object (as `FIELD v` or `DUMMY`) or it returns `sy-subrc = 4` always. `S_USER_GRP` → `ID 'ACTVT' FIELD '05' ID 'CLASS' DUMMY`. `S_BTCH_ADM` → `ID 'BTCADMIN' FIELD 'Y'`. The OBJECT name may be a variable; ID names are literals. |
 | A23 | `cl_abap_tstmp=>subtract` needs `timestamp` args — wrap a `timestampl` field as `CONV timestamp( ts_l )` (drops sub-second, fine for elapsed timing). |
 | A24 | Transport / repo metadata by direct SELECT (all transparent tables): request + tasks `E070` (`STRKORR` = parent), objects `E071` (`PGMID` `OBJECT` `OBJ_NAME` `LOCKFLAG`), where-used `WBCROSSGT` (`OTYPE` 2-char, `NAME`, `INCLUDE`), custom code `TADIR` (`DEVCLASS` + `OBJ_NAME LIKE 'Z%'/'Y%'` + `DELFLAG`), package existence `TDEVC`. `E070-TRSTATUS` `D`/`L` = modifiable. |
+| A25 | **OPEN, not yet fixed** — `ZIF_AB_V1_UT_BULK~run_parallel`'s documented `iv_context` ("serialized xstring handed to every instance") is **never actually delivered** to the handler. `lcl_par=>do` (`zcl_ab_v1_ut_bulk.clas.locals_imp.abap`) stores it on the dispatcher (`lo_worker->mv_context`) but calls `CREATE OBJECT lo_handler TYPE (mv_handler_class).` with no constructor args and never passes `mv_context` into it — any handler built expecting shared setup data via context silently gets none. Found 2026-09-11 while designing parallel dispatch for the Smart Form → Adobe Form Migration project (`memory:smartform_adobe_migration_project`); deferred there rather than fixed inline. **Fix, when picked up:** define a small optional interface (e.g. `ZIF_AB_V1_UT_BULK_CTX` with `set_context( iv_context )`), and in `lcl_par=>do`, after `CREATE OBJECT`, `TRY. CAST zif_ab_v1_ut_bulk_ctx( lo_handler )->set_context( mv_context ). CATCH cx_sy_move_cast_error ##NO_HANDLER. ENDTRY.` so handlers that don't implement it are unaffected. |
 
 ---
 
@@ -143,6 +144,7 @@ Target platform for all rules: **SAP S/4HANA 2023 on-premise, Standard ABAP (7.5
 | c873e4a | **User abapGit "Sync"** — canonicalized every `*.xml` (BOM added), fixing the "all objects differ on every pull" loop (G11). Also collapsed `zab_v1_ut.msag.xml` / `zab_v1_ut_area.doma.xml` to the full `DD0x` form. |
 | b6ab9a4 | `docs/09_unit_test_reference.md` — every method → its ABAP Unit test, coverage table, all-green prerequisites, v1.1 test patterns. |
 | a24f455 | Sync wiped `ZAB_V1_UT_DEMO_GUI` source → restored from `9edaae4` (G12). `CFG~enum_area` asserted exactly 18 domain values; v1.1 added 5 → relaxed to `>= 18` + checks `JSON`/`HTTP` present. P7 (facade-active-before-report). |
+| _(2026-09-11)_ | **Found, not fixed**: `run_parallel`'s `iv_context` never reaches the handler instance (A25). Found from the Smartform-Adobe-Migration project while scoping parallel dispatch for `ZSF2AF_R_LEGACY_GRAB`; not picked up here yet. |
 
 ---
 
