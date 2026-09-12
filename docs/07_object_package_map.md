@@ -38,7 +38,7 @@ below (current and future) are created in `ZABAP_UTIL`.** No per-object mapping 
 | `ZAB_V1_UT` | Message class (MSAG) | `src/zab_v1_ut.msag.xml` | `ZABAP_UTIL` |
 | `ZCX_AB_V1_UT` | Exception class (CLAS) | `src/zcx_ab_v1_ut.clas.*` | `ZABAP_UTIL` |
 
-## Interfaces (19)
+## Interfaces (20)
 
 | Object | abapGit file | Package |
 |---|---|---|
@@ -70,8 +70,9 @@ below (current and future) are created in `ZABAP_UTIL`.** No per-object mapping 
 | `ZIF_AB_V1_UT_CUTOVER` | `src/zif_ab_v1_ut_cutover.intf.*` | `ZABAP_UTIL` |
 | `ZIF_AB_V1_UT_CUTOVER_EXEC` | `src/zif_ab_v1_ut_cutover_exec.intf.*` | `ZABAP_UTIL` |
 | `ZIF_AB_V1_UT_TRANSPORT` | `src/zif_ab_v1_ut_transport.intf.*` | `ZABAP_UTIL` |
+| `ZIF_AB_V1_UT_DEPDEL` | `src/zif_ab_v1_ut_depdel.intf.*` | `ZABAP_UTIL` |
 
-## Classes (22)
+## Classes (23)
 
 | Object | Status | abapGit file | Package |
 |---|---|---|---|
@@ -102,13 +103,16 @@ below (current and future) are created in `ZABAP_UTIL`.** No per-object mapping 
 | `ZCL_AB_V1_UT_BAPI` | committed | `src/zcl_ab_v1_ut_bapi.clas.*` | `ZABAP_UTIL` |
 | `ZCL_AB_V1_UT_CUTOVER` | committed | `src/zcl_ab_v1_ut_cutover.clas.*` | `ZABAP_UTIL` |
 | `ZCL_AB_V1_UT_TRANSPORT` | committed | `src/zcl_ab_v1_ut_transport.clas.*` | `ZABAP_UTIL` |
+| `ZCL_AB_V1_UT_DEPDEL` | committed | `src/zcl_ab_v1_ut_depdel.clas.*` | `ZABAP_UTIL` |
 
-## Reports (2)
+## Reports (4)
 
 | Object | Status | abapGit file | Package |
 |---|---|---|---|
 | `ZAB_V1_UT_DEMO` | committed | `src/zab_v1_ut_demo.prog.*` | `ZABAP_UTIL` |
 | `ZAB_V1_UT_DEMO_GUI` | committed | `src/zab_v1_ut_demo_gui.prog.*` | `ZABAP_UTIL` |
+| `ZAB_V1_UT_DEMO_INT` | committed | `src/zab_v1_ut_demo_int.prog.*` | `ZABAP_UTIL` |
+| `ZAB_V1_UT_DEMO_DEPDEL` | committed | `src/zab_v1_ut_demo_depdel.prog.*` | `ZABAP_UTIL` |
 
 ## Not imported (repo docs / config)
 

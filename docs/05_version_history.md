@@ -73,6 +73,22 @@ activated interface**; docs 02/03 are being updated to match.
 
 ---
 
+## Scope delivered vs. spec (Dependency Deletion — Phase 1, increment 1a)
+
+New **Gated** area (called directly, never through the facade — like `ZCL_AB_V1_UT_GUI`),
+per `docs/10_dependency_deletion_scope.md`.
+
+| Interface | Delivered | Trimmed / parked |
+|---|---|---|
+| `ZIF_AB_V1_UT_DEPDEL` | `ddic_dependencies` (Core, read-only): walks Table/Structure (`TABL`) → field data elements (`DTEL`) → domains (`DOMA`); hard namespace guard refuses any non-`Z`/`Y` root | Table Type / Search Help / View / Lock Object roots raise `ZCX_AB_V1_UT` ("not supported yet") — parked to a follow-up increment rather than guess undocumented DD40L/DD30L/DD25L semantics (engineering-log P3: no guessed catalog reads). Delete methods (`DDIF_*_DELETE`) and the eligibility/where-used engine are increments 1b–1d, not built yet. |
+
+Demo: `ZAB_V1_UT_DEMO_DEPDEL` (selection screen: object type + name, prints the indented
+tree). Tests: `ltc_depdel` in `zcl_ab_v1_ut_depdel.clas.testclasses.abap` (namespace guard,
+unknown-object guard, unsupported-type guard, domain-is-a-leaf, table walk using this
+repo's own `ZAB_V1_UT_ADPT`/`ZAB_V1_UT_AREA` as stable fixtures).
+
+---
+
 ## Change Log
 
 | Version | Date | Author | Summary |
@@ -81,6 +97,7 @@ activated interface**; docs 02/03 are being updated to match.
 | — | 2026-09-01 | Vernasoft AI | Approved. Build stages 1–3a pushed. Activation fixes: data element `ZAB_V1_UT_AREA` label lengths; `RETURNING` params generic `TYPE p` → `TYPE decfloat34` in `_STR`/`_CONV`; `_CONV` `iv_rate_type` `kurst_curr`→`kurst`; `_MAIL` `ty_mail-to`→`recipients`, `commit`→`commit_work`. |
 | — | 2026-09-02 | Vernasoft AI | v1.1.0 implementation toolkit built (stages 1–8): DDIC + msgs 021–035 + 11 interfaces; `ZCL_AB_V1_UT_HTTP` (classic `cl_http_client`); `ZCL_AB_V1_UT_BULK` + `_BULK_STORE_MEM` (`cl_abap_parallel` worker); `ZCL_AB_V1_UT_BAPI` (FUPARAREF auto-bind, BDC); `ZCL_AB_V1_UT_CUTOVER`; `ZCL_AB_V1_UT_TRANSPORT`; facade accessors + seams; `ZAB_V1_UT_DEMO_INT` + `ZCL_AB_V1_UT_DEMO_BULK_H`. Engineering log extended to A24 / G10. Pending: ATC on package + C1 release extension. |
 | **v1.0.0** | 2026-09-02 | Vernasoft AI | **All 18 areas implemented, activated in S/4HANA 2023.** 22 classes (facade + 18 area impls + `ZCX_AB_V1_UT` + `ZCL_AB_V1_UT_PHASE` + `ZCL_AB_V1_UT_GUI`), 19 interfaces, message class, 3 DDIC objects, 2 demo reports, 13 ABAP Unit classes. See §"Scope delivered vs. spec" below. Pending: ATC run + C1 release. |
+| — | 2026-09-12 | Vernasoft AI | Dependency Deletion tool scoped (`docs/10_dependency_deletion_scope.md`) and Phase 1 increment 1a built: `ZIF_AB_V1_UT_DEPDEL` + `ZCL_AB_V1_UT_DEPDEL` (DDIC read layer, TABL→DTEL→DOMA), demo `ZAB_V1_UT_DEMO_DEPDEL`, unit tests. No delete capability yet — read-only. |
 
 ---
 
