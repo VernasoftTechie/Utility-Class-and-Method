@@ -35,7 +35,7 @@ CLASS lcl_demo IMPLEMENTATION.
     DATA(lo) = NEW zcl_ab_v1_ut_depdel( ).
 
     TRY.
-        DATA(lt) = lo->ddic_dependencies( iv_object = iv_object iv_obj_name = iv_obj_name ).
+        DATA(lt) = lo->zif_ab_v1_ut_depdel~ddic_dependencies( iv_object = iv_object iv_obj_name = iv_obj_name ).
 
         w( |ddic_dependencies( { iv_object } { iv_obj_name } ) -> { lines( lt ) } node(s)| ) ##NO_TEXT.
         SKIP.
