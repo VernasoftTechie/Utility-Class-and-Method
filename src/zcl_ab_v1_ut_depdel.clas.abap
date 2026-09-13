@@ -43,8 +43,10 @@ CLASS zcl_ab_v1_ut_depdel IMPLEMENTATION.
 
 
   METHOD zif_ab_v1_ut_depdel~ddic_dependencies.
-    DATA(lv_object)   = to_upper( iv_object ).
-    DATA(lv_obj_name) = to_upper( iv_obj_name ).
+    DATA lv_object   TYPE trobjtype.
+    DATA lv_obj_name TYPE sobj_name.
+    lv_object   = to_upper( iv_object ).
+    lv_obj_name = to_upper( iv_obj_name ).
 
     IF is_customer_object( lv_obj_name ) = abap_false.
       zcx_ab_v1_ut=>raise_t100( iv_msgno = '019'
@@ -110,8 +112,9 @@ CLASS zcl_ab_v1_ut_depdel IMPLEMENTATION.
         AND rollname <> @space
       INTO TABLE @DATA(lt_fld).
 
+    DATA lv_dtel TYPE sobj_name.
     LOOP AT lt_fld INTO DATA(ls_fld).
-      DATA(lv_dtel) = to_upper( ls_fld-rollname ).
+      lv_dtel = to_upper( ls_fld-rollname ).
       IF NOT line_exists( ct[ object = 'DTEL' obj_name = lv_dtel ] ).
         APPEND VALUE #( object        = 'DTEL'
                         obj_name      = lv_dtel
@@ -139,7 +142,8 @@ CLASS zcl_ab_v1_ut_depdel IMPLEMENTATION.
       RETURN. " built-in-type data element - no domain dependency
     ENDIF.
 
-    DATA(lv_dom) = to_upper( lv_domname ).
+    DATA lv_dom TYPE sobj_name.
+    lv_dom = to_upper( lv_domname ).
     IF NOT line_exists( ct[ object = 'DOMA' obj_name = lv_dom ] ).
       APPEND VALUE #( object        = 'DOMA'
                       obj_name      = lv_dom
